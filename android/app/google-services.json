@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "165772492498",
+    "project_id": "revista-way",
+    "storage_bucket": "revista-way.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:165772492498:android:fdb0ff4bc04af55438b70b",
+        "android_client_info": {
+          "package_name": "com.example.revista_way2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "165772492498-no4fle75imodjcp90tvvfd76de2u1dp7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD3hn0Eb7_L4HXvvC4AcDewXQIYCSjqol0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "165772492498-no4fle75imodjcp90tvvfd76de2u1dp7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
