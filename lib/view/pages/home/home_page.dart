@@ -26,7 +26,9 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               actions: [
-                IconButton(onPressed: () {}, icon: Icon(Icons.upload_rounded)),
+                IconButton(onPressed: () {
+                  Navigator.pushNamed(context, "/send");
+                }, icon: Icon(Icons.upload_rounded)),
                 SizedBox(width: AppSize.defaultPadding),
                 IconButton(onPressed: () {
                   Navigator.pushNamed(context, "/login");

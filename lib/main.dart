@@ -18,10 +18,6 @@ class MyApp extends StatelessWidget {
             return Center(
               child: Text("Algo deu Errado"),
             );
-          } else if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: Text("Carregando!!"),
-            );
           } else if (snapshot.connectionState == ConnectionState.done) {
             return Center(
               child: AppWidget(),
