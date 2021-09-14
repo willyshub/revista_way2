@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:revista_way2/model/doc_model.dart';
+
 class UserModel {
   String completeName;
   String college;
@@ -9,7 +11,7 @@ class UserModel {
     required this.college,
     required this.userName,
   });
-
+// model, view_model, viewm, services utils
   UserModel copyWith({
     String? completeName,
     String? college,
@@ -21,43 +23,4 @@ class UserModel {
       userName: userName ?? this.userName,
     );
   }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'completeName': completeName,
-      'college': college,
-      'userName': userName,
-    };
-  }
-
-  factory UserModel.fromMap(Map<String, dynamic> map) {
-    return UserModel(
-      completeName: map['completeName'],
-      college: map['college'],
-      userName: map['userName'],
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory UserModel.fromJson(String source) =>
-      UserModel.fromMap(json.decode(source));
-
-  @override
-  String toString() =>
-      'UserModel(completeName: $completeName, college: $college, userName: $userName)';
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is UserModel &&
-        other.completeName == completeName &&
-        other.college == college &&
-        other.userName == userName;
-  }
-
-  @override
-  int get hashCode =>
-      completeName.hashCode ^ college.hashCode ^ userName.hashCode;
 }

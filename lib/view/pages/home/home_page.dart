@@ -1,14 +1,22 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+
+import 'package:revista_way2/services/database.dart';
+import 'package:revista_way2/theme/app_colors.dart';
 import 'package:revista_way2/theme/app_size.dart';
+import 'package:revista_way2/theme/app_text_styles.dart';
 import 'package:revista_way2/view/widgets/custom_drawer_widget.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  HomePage({
+    Key? key,
+  }) : super(key: key);
 
+  final database = Database();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: CustomDrawerWidget(),
+      drawer: const CustomDrawerWidget(),
       body: NestedScrollView(
         headerSliverBuilder: (context, bool a) {
           return [
@@ -17,28 +25,42 @@ class HomePage extends StatelessWidget {
               title: RichText(
                 text: TextSpan(
                   text: "Revista",
-                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 20.0),
+                  style: AppTextStyles.titleRegular,
                   children: [
                     TextSpan(
-                        text: "WAY",
-                        style: TextStyle(fontWeight: FontWeight.w300))
+                      text: "WAY",
+                      style: AppTextStyles.titleLight,
+                    )
                   ],
                 ),
               ),
               actions: [
-                IconButton(onPressed: () {
-                  Navigator.pushNamed(context, "/send");
-                }, icon: Icon(Icons.upload_rounded)),
-                SizedBox(width: AppSize.defaultPadding),
-                IconButton(onPressed: () {
-                  Navigator.pushNamed(context, "/login");
-                }, icon: Icon(Icons.person)),
-                SizedBox(width: AppSize.defaultPadding),
+                IconButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, "/login");
+                  },
+                  icon: const Icon(Icons.person),
+                ),
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.more_vert_rounded),
+                ),
+                SizedBox(width: AppSize.defaultPadding / 3),
               ],
             )
           ];
         },
         body: Container(),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        backgroundColor: AppColors.primary,
+        child: IconButton(
+          onPressed: () {
+            Navigator.pushNamed(context, "/send");
+          },
+          icon: const Icon(Icons.upload_rounded),
+        ),
       ),
     );
   }

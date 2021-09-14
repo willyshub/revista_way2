@@ -15,12 +15,14 @@ class MyApp extends StatelessWidget {
         future: _initialization,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
-            return Center(
+            return const Center(
               child: Text("Algo deu Errado"),
             );
           } else if (snapshot.connectionState == ConnectionState.done) {
             return Center(
-              child: AppWidget(),
+              child: AppWidget(
+                initialization: _initialization,
+              ),
             );
           }
           return Container();

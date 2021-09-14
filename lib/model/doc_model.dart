@@ -37,21 +37,21 @@ class DocModel {
 
   factory DocModel.fromMap(Map<String, dynamic> map) {
     return DocModel(
-      size: map['size'],
-      extension: map['extension'],
-      path: map['path'],
-      name: map['name'],
+      size: map['size'] as int,
+      extension: map['extension'] as String,
+      path: map['path'] as String,
+      name: map['name'] as String,
     );
   }
 
   String toJson() => json.encode(toMap());
 
   factory DocModel.fromJson(String source) =>
-      DocModel.fromMap(json.decode(source));
+      DocModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
-    return 'DocModel(size: $size, extension: $extension, path: $path, name: $name)';
+    return "DocModel(size: $size, extension: $extension, path: $path, name: $name)";
   }
 
   @override

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+
 import 'package:revista_way2/theme/app_size.dart';
-import 'package:revista_way2/view/pages/home/send_page/app_colors.dart';
+import 'package:revista_way2/theme/app_text_styles.dart';
+import 'package:revista_way2/theme/app_colors.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  LoginPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +18,7 @@ class LoginPage extends StatelessWidget {
               title: RichText(
                 text: TextSpan(
                   text: "Login",
-                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 20.0),
+                  style: AppTextStyles.titleRegular,
                   children: [
                     TextSpan(text: ""),
                   ],
@@ -34,46 +36,60 @@ class LoginPage extends StatelessWidget {
 
 Widget body(BuildContext context) {
   return Container(
-    padding: EdgeInsets.all(AppSize.defaultPadding * 2),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+    padding: EdgeInsets.symmetric(horizontal: AppSize.defaultPadding * 2),
+    child: ListView(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            'Login',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold),
-          ),
-        ),
         SizedBox(
           height: 30.0,
         ),
-        TextField(
+        TextFormField(
           decoration: InputDecoration(
-            hintText: 'Email',
-            suffixIcon: Icon(Icons.email),
+            hintText: 'Seu nome completo',
+            prefixIcon: Icon(Icons.person),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
             ),
           ),
         ),
-        SizedBox(
-          height: 20.0,
-        ),
-        TextField(
-          obscureText: true,
+        SizedBox(height: AppSize.defaultPadding * 2),
+        TextFormField(
+          enableSuggestions: true,
+          enableInteractiveSelection: true,
           decoration: InputDecoration(
-            hintText: 'Password',
-            suffixIcon: Icon(Icons.visibility_off),
+            hintText: 'Onde você estuda?',
+            prefixIcon: Icon(Icons.school_rounded),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20.0),
             ),
           ),
         ),
-        SizedBox(
-          height: 30.0,
+        SizedBox(height: AppSize.defaultPadding * 2),
+        TextButton(
+          onPressed: () {},
+          style: TextButton.styleFrom(
+            backgroundColor: AppColors.primary,
+            padding: EdgeInsets.all(AppSize.defaultPadding),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(right: AppSize.defaultPadding),
+                child: Image.asset(
+                  'assets/images/google.png',
+                  filterQuality: FilterQuality.high,
+                  height: 30.0,
+                  width: 30.0,
+                ),
+              ),
+              Text(
+                "Cadastre-se com o Google",
+                style: AppTextStyles.titleRegular,
+              )
+            ],
+          ),
         ),
+        SizedBox(height: AppSize.defaultPadding * 2),
         Padding(
           padding: const EdgeInsets.all(10.0),
           child: Row(
@@ -90,7 +106,7 @@ Widget body(BuildContext context) {
             ],
           ),
         ),
-        SizedBox(height: 20.0),
+        SizedBox(height: AppSize.defaultPadding * 2),
         GestureDetector(
           onTap: () {
             // Navigator.push(context, MaterialPageRoute(builder: (context)=>Second()));
@@ -107,4 +123,46 @@ Widget body(BuildContext context) {
       ],
     ),
   );
+}
+
+class AutocompleteForm extends StatelessWidget {
+  const AutocompleteForm({
+    Key? key,
+  }) : super(key: key);
+
+  static const List<String> _userOptions = [
+    "oi",
+    "Universidade Federal do Vale do São Francisco",
+  ];
+
+  static String _displayStringForOption(String option) => option;
+
+  @override
+  Widget build(BuildContext context) {
+    return Autocomplete<String>(
+      displayStringForOption: _displayStringForOption,
+      optionsBuilder: (TextEditingValue textEditingValue) {
+        if (textEditingValue.text == '') {
+          return const Iterable<String>.empty();
+        }
+        return _userOptions.where((String option) {
+          return option.toString().toLowerCase().contains(
+                textEditingValue.text.toLowerCase(),
+              );
+        });
+      },
+
+      // fieldViewBuilder: (
+      //   context,
+      //   textEditingController,
+      //   focusNode,
+
+      // ) {
+      //   return Container();
+      // },
+      onSelected: (String selection) {
+        print('You just selected ${_displayStringForOption(selection)}');
+      },
+    );
+  }
 }

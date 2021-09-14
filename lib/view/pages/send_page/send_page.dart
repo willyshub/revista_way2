@@ -3,6 +3,7 @@ import 'package:native_pdf_view/native_pdf_view.dart';
 import 'package:open_file/open_file.dart';
 import 'package:revista_way2/model/doc_model.dart';
 import 'package:revista_way2/theme/app_size.dart';
+import 'package:revista_way2/theme/app_text_styles.dart';
 import 'package:revista_way2/view-model/send_bloc.dart';
 
 class SendPage extends StatefulWidget {
@@ -14,6 +15,8 @@ class SendPage extends StatefulWidget {
 
 class _SendPageState extends State<SendPage> {
   SendBloc bloc = SendBloc();
+
+  var titleController = TextEditingController();
 
   @override
   void dispose() {
@@ -31,14 +34,54 @@ class _SendPageState extends State<SendPage> {
               centerTitle: true,
               title: RichText(
                 text: TextSpan(
-                    text: "Enviar", children: [TextSpan(text: " Arquiv")]),
+                  text: "Enviar",
+                  style: AppTextStyles.titleRegular,
+                  children: [
+                    TextSpan(
+                      text: " arquivo",
+                    )
+                  ],
+                ),
               ),
             )
           ];
         },
-        body: Column(
-          mainAxisSize: MainAxisSize.min,
+        body: ListView(
+          padding: EdgeInsets.symmetric(
+            horizontal: AppSize.defaultPadding,
+            vertical: AppSize.defaultPadding,
+          ),
+          shrinkWrap: true,
           children: [
+            /*
+            String title;
+            String authors;
+            String abstract;
+            DocModel doc;
+            */
+            Padding(
+              padding: EdgeInsets.only(bottom: AppSize.defaultPadding / 2),
+              child: Text(
+                "Título",
+                style: AppTextStyles.titleBoldHeading,
+              ),
+            ),
+            TextField(
+              controller: titleController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'Título do arquivo',
+              ),
+            ),
+            customSizedBox(),
+            TextField(
+              controller: titleController,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'Autores',
+              ),
+            ),
+            customSizedBox(),
             Container(
               height: 80,
               width: AppSize.getWidth(context),
@@ -60,7 +103,8 @@ class _SendPageState extends State<SendPage> {
                 stream: bloc.myStream,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
-                    return GridView.builder(
+                    return DocWidgetModel(doc: bloc.docList.first);
+                    /*return GridView.builder(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                       ),
@@ -71,10 +115,13 @@ class _SendPageState extends State<SendPage> {
                       itemBuilder: (context, index) {
                         return DocWidgetModel(doc: bloc.docList[index]);
                       },
-                    );
+                    );*/
                   } else {
                     return Center(
-                      child: Text("Sem doc"),
+                      child: Text(
+                        "Anexe seu artigo",
+                        style: AppTextStyles.input,
+                      ),
                     );
                   }
                 }),
@@ -83,6 +130,10 @@ class _SendPageState extends State<SendPage> {
       ),
     );
   }
+
+  Widget customSizedBox() => SizedBox(
+        height: AppSize.defaultPadding,
+      );
 }
 
 class DocWidgetModel extends StatelessWidget {
@@ -107,7 +158,6 @@ class DocWidgetModel extends StatelessWidget {
             MaterialPageRoute(builder: (context) => pdfView()),
           );
         }
-        OpenFile.open(doc.path);
       },
       child: Container(
         width: AppSize.getWidth(context) / 2,
