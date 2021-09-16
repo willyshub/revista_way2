@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:revista_way2/model/article_model.dart';
+import 'package:revista_way2/view/pages/article/article_page.dart';
 
 import 'package:revista_way2/view/pages/login/login_page.dart';
 
@@ -10,7 +12,7 @@ import 'view/pages/send_page/send_page.dart';
 import 'view/pages/splash/splash_page.dart';
 
 class AppWidget extends StatelessWidget {
-  AppWidget({
+  const AppWidget({
     Key? key,
     required this.initialization,
   }) : super(key: key);
@@ -22,15 +24,15 @@ class AppWidget extends StatelessWidget {
       title: "RevistaWAY",
       theme: ThemeData(
         primaryColor: AppColors.primary,
+        splashColor: AppColors.primary,
       ),
       initialRoute: "/splash",
       routes: {
-        "/home": (context) => HomePage(
-
-            ),
+        "/home": (context) => HomePage(),
         "/splash": (context) => SplashPage(),
         "/login": (context) => LoginPage(),
         "/send": (context) => SendPage(),
+        "/article": (context) => const ArticlePage(),
       },
       // home: SplashPage(),
       // //home: LoginPage(),

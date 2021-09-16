@@ -19,7 +19,7 @@ linter:
     always_specify_types: false
 
     # Back to the 80s
-    lines_longer_than_80_chars: true
+    lines_longer_than_80_chars: false
 
     # Use parameter order as in json response
     always_put_required_named_parameters_first: false

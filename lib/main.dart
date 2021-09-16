@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:revista_way2/app_widget.dart';
+import 'package:revista_way2/mocks/home_test.dart';
+
+import 'app_widget.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,13 +21,14 @@ class MyApp extends StatelessWidget {
               child: Text("Algo deu Errado"),
             );
           } else if (snapshot.connectionState == ConnectionState.done) {
+            //return HomeTest(initialization: _initialization);
             return Center(
               child: AppWidget(
                 initialization: _initialization,
               ),
             );
           }
-          return Container();
+          return const Center(child: CircularProgressIndicator());
         });
     //return AppWidget();
   }

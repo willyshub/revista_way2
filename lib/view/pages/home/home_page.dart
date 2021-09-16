@@ -5,6 +5,7 @@ import 'package:revista_way2/services/database.dart';
 import 'package:revista_way2/theme/app_colors.dart';
 import 'package:revista_way2/theme/app_size.dart';
 import 'package:revista_way2/theme/app_text_styles.dart';
+import 'package:revista_way2/view/pages/send_page/componentes/title_widget.dart';
 import 'package:revista_way2/view/widgets/custom_drawer_widget.dart';
 
 class HomePage extends StatelessWidget {
@@ -50,7 +51,7 @@ class HomePage extends StatelessWidget {
             )
           ];
         },
-        body: Container(),
+        body: ListArticles(),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
@@ -62,6 +63,37 @@ class HomePage extends StatelessWidget {
           icon: const Icon(Icons.upload_rounded),
         ),
       ),
+    );
+  }
+}
+
+class ListArticles extends StatelessWidget {
+  const ListArticles({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      padding: EdgeInsets.zero,
+      itemCount: 20,
+      shrinkWrap: true,
+      itemBuilder: (_, index) {
+        return ListTile(
+          onTap: (){
+            Navigator.pushNamed(context, "/article");
+          },
+          title: Text(
+            "Artigo bem grande para parecer grande grande grandegrandegrande",
+            overflow: TextOverflow.ellipsis,
+            style: AppTextStyles.titleListTile,
+          ),
+          subtitle: Text(
+              "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available",
+              style: AppTextStyles.trailingRegular),
+        );
+      },
     );
   }
 }

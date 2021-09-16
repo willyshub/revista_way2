@@ -1,16 +1,26 @@
 import 'dart:convert';
 
 class DocModel {
-  int size;
-  String extension;
-  String path;
-  String name;
   DocModel({
     required this.size,
     required this.extension,
     required this.path,
     required this.name,
   });
+
+  factory DocModel.fromMap(Map<String, dynamic> map) {
+    return DocModel(
+      size: map['size'] as int,
+      extension: map['extension'] as String,
+      path: map['path'] as String,
+      name: map['name'] as String,
+    );
+  }
+
+  int size;
+  String extension;
+  String path;
+  String name;
 
   DocModel copyWith({
     int? size,
@@ -33,15 +43,6 @@ class DocModel {
       'path': path,
       'name': name,
     };
-  }
-
-  factory DocModel.fromMap(Map<String, dynamic> map) {
-    return DocModel(
-      size: map['size'] as int,
-      extension: map['extension'] as String,
-      path: map['path'] as String,
-      name: map['name'] as String,
-    );
   }
 
   String toJson() => json.encode(toMap());

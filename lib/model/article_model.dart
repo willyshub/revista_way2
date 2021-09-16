@@ -1,14 +1,7 @@
-import 'dart:convert';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:revista_way2/model/doc_model.dart';
 
 class Article {
-  String title;
-  List<String> authors;
-  String abstract;
-  DocModel doc;
-  List<String> ref;
+  
   Article({
     required this.title,
     required this.authors,
@@ -16,6 +9,12 @@ class Article {
     required this.doc,
     required this.ref,
   });
+
+  String title;
+  List<String> authors;
+  String abstract;
+  DocModel doc;
+  List<String> ref;
 
   Article copyWith({
     String? title,

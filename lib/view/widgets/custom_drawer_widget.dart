@@ -15,17 +15,22 @@ class CustomDrawerWidget extends StatelessWidget {
       child: ListView(
         children: [
           ItemDrawerWidget(
-            fun: (){},
+            fun: () {},
             icon: Icons.notes,
             text: "Sobre",
           ),
           ItemDrawerWidget(
-            fun: (){},
+            fun: () {},
             icon: Icons.contacts,
             text: "Contatos",
           ),
           ItemDrawerWidget(
-            fun: (){},
+            fun: () {},
+            icon: Icons.bookmarks_rounded,
+            text: "Meus artigos",
+          ),
+          ItemDrawerWidget(
+            fun: () {},
             icon: Icons.admin_panel_settings,
             text: "Painel ADM",
           ),
