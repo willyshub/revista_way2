@@ -16,51 +16,55 @@ class HomePage extends StatelessWidget {
   final database = Database();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: const CustomDrawerWidget(),
-      body: NestedScrollView(
-        headerSliverBuilder: (context, bool a) {
-          return [
-            SliverAppBar(
-              centerTitle: true,
-              title: RichText(
-                text: TextSpan(
-                  text: "Revista",
-                  style: AppTextStyles.titleRegular,
-                  children: [
-                    TextSpan(
-                      text: "WAY",
-                      style: AppTextStyles.titleLight,
-                    )
-                  ],
+    return SafeArea(
+      child: Scaffold(
+        drawer: const CustomDrawerWidget(),
+        body: NestedScrollView(
+          headerSliverBuilder: (context, bool a) {
+            return [
+              SliverAppBar(
+                centerTitle: true,
+                floating: true,
+                elevation: AppSize.defaultElevation,
+                title: RichText(
+                  text: TextSpan(
+                    text: "Revista",
+                    style: AppTextStyles.titleRegular,
+                    children: [
+                      TextSpan(
+                        text: "WAY",
+                        style: AppTextStyles.titleLight,
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              actions: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, "/login");
-                  },
-                  icon: const Icon(Icons.person),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.more_vert_rounded),
-                ),
-                SizedBox(width: AppSize.defaultPadding / 3),
-              ],
-            )
-          ];
-        },
-        body: ListArticles(),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        backgroundColor: AppColors.primary,
-        child: IconButton(
-          onPressed: () {
-            Navigator.pushNamed(context, "/send");
+                actions: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, "/login");
+                    },
+                    icon: const Icon(Icons.person),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.more_vert_rounded),
+                  ),
+                  SizedBox(width: AppSize.defaultPadding / 3),
+                ],
+              )
+            ];
           },
-          icon: const Icon(Icons.upload_rounded),
+          body: const ListArticles(),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          backgroundColor: AppColors.primary,
+          child: IconButton(
+            onPressed: () {
+              Navigator.pushNamed(context, "/send");
+            },
+            icon: const Icon(Icons.upload_rounded),
+          ),
         ),
       ),
     );
@@ -74,24 +78,45 @@ class ListArticles extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
+    return ListView.separated(
+      
+      separatorBuilder: (_, index){
+        return SizedBox(height: AppSize.defaultPadding * 0.8,);
+      },
       physics: const NeverScrollableScrollPhysics(),
-      padding: EdgeInsets.zero,
+      padding: EdgeInsets.only(top: AppSize.defaultPadding * 0.8),
       itemCount: 20,
       shrinkWrap: true,
       itemBuilder: (_, index) {
         return ListTile(
-          onTap: (){
+          onTap: () {
             Navigator.pushNamed(context, "/article");
           },
           title: Text(
-            "Artigo bem grande para parecer grande grande grandegrandegrande",
+            "Uso de tecnlogia no ambito empresarial",
             overflow: TextOverflow.ellipsis,
             style: AppTextStyles.titleListTile,
           ),
-          subtitle: Text(
-              "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available",
-              style: AppTextStyles.trailingRegular),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: AppSize.defaultPadding * 0.3),
+                child: Text(
+                  "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available",
+                  style: AppTextStyles.trailingRegular,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: AppSize.defaultPadding * 0.3),
+                child: Text(
+                  "Autor: Andressa",
+                  style: AppTextStyles.buttonHeading,
+                ),
+              ),
+            ],
+          ),
+          isThreeLine: true,
         );
       },
     );

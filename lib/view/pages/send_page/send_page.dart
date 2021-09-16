@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:native_pdf_view/native_pdf_view.dart';
 import 'package:open_file/open_file.dart';
 import 'package:revista_way2/model/doc_model.dart';
@@ -31,78 +32,90 @@ class _SendPageState extends State<SendPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: NestedScrollView(
-        headerSliverBuilder: (context, bool a) {
-          return [
-            SliverAppBar(
-              centerTitle: true,
-              title: RichText(
-                text: TextSpan(
-                  text: "Enviar",
-                  style: AppTextStyles.titleRegular,
-                  children: const [
-                    TextSpan(
-                      text: " arquivo",
-                    )
-                  ],
+    return SafeArea(
+      child: Scaffold(
+        body: NestedScrollView(
+          headerSliverBuilder: (context, bool a) {
+            return [
+              SliverAppBar(
+                centerTitle: true,
+                brightness: Brightness.dark,
+                backgroundColor: AppColors.primary,
+                title: RichText(
+                  text: TextSpan(
+                    text: "Enviar",
+                    style: AppTextStyles.titleRegular,
+                    children: const [
+                      TextSpan(
+                        text: " arquivo",
+                      )
+                    ],
+                  ),
                 ),
+              )
+            ];
+          },
+          body: ListView(
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSize.defaultPadding,
+              vertical: AppSize.defaultPadding,
+            ),
+            shrinkWrap: true,
+            children: [
+              customSizedBox(),
+              const TitleWidget(
+                title: "Título",
               ),
-            )
-          ];
-        },
-        body: ListView(
-          padding: EdgeInsets.symmetric(
-            horizontal: AppSize.defaultPadding,
-            vertical: AppSize.defaultPadding,
-          ),
-          shrinkWrap: true,
-          children: [
-            customSizedBox(),
-            const TitleWidget(
-              title: "Título",
-            ),
-            SimpleTextField(
-              hintText: "Escreva o título do seu artigo",
-              textEditingController: titleController,
-            ),
-            customSizedBox(),
-            const TitleWidget(
-              title: "Autores",
-            ),
-            SimpleTextField(
-              hintText: "Escreva o nome do autor",
-              textEditingController: titleController,
-            ),
-            const ButtonAddAuthor(),
-            customSizedBox(),
-            const TitleWidget(
-              title: "Resumo",
-            ),
-            SimpleTextField(
-              hintText: "Escreva seu resumo",
-              textEditingController: authorController,
-              isExpand: true,
-            ),
-            Padding(
-                padding: EdgeInsets.only(top: AppSize.defaultPadding / 2),
-                child: ButtonAttachDoc(bloc: bloc)),
-            StreamBuilder<List<DocModel>>(
-              stream: bloc.myStream,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return DocWidgetModel(doc: bloc.docList.first);
-                } else {
-                  return Center(
+              SimpleTextField(
+                hintText: "Escreva o título do seu artigo",
+                textEditingController: titleController,
+              ),
+              customSizedBox(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const TitleWidget(
+                    title: "Autores",
+                  ),
+                  Padding(
+                    padding:
+                        EdgeInsets.only(bottom: AppSize.defaultPadding / 2),
                     child: Text(
-                      "Anexe seu artigo",
-                      style: AppTextStyles.input,
+                      "Add new",
+                      style: AppTextStyles.trailingRegular,
                     ),
-                  );
-                }
-              },
-            ),
-          ],
+                  ),
+                ],
+              ),
+              SimpleTextField(
+                hintText: "Escreva o nome do autor",
+                textEditingController: titleController,
+              ),
+              const ButtonAddAuthor(),
+              customSizedBox(),
+              const TitleWidget(
+                title: "Resumo",
+              ),
+              SimpleTextField(
+                hintText: "Escreva seu resumo",
+                textEditingController: authorController,
+                isExpand: true,
+              ),
+              StreamBuilder<List<DocModel>>(
+                stream: bloc.myStream,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return DocWidgetModel(doc: bloc.docList.first);
+                  } else {
+                    return Padding(
+                      padding: EdgeInsets.only(top: AppSize.defaultPadding / 2),
+                      child: ButtonAttachDoc(bloc: bloc),
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -199,35 +212,53 @@ class DocWidgetModel extends StatelessWidget {
   final DocModel doc;
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        if (doc.extension == "pdf") {
-          final pdfController = PdfController(
-            document: PdfDocument.openFile(doc.path),
-          );
-
-          Widget pdfView() => PdfView(
-                controller: pdfController,
-                documentLoader:
-                    const Center(child: CircularProgressIndicator()),
-                pageLoader: const Center(child: CircularProgressIndicator()),
-              );
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => pdfView()),
-          );
-        }
-      },
-      child: Container(
-        width: AppSize.getWidth(context) / 2,
-        color: Colors.red,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.picture_as_pdf_rounded),
-            Text(doc.name),
-          ],
+    return Container(
+      margin: EdgeInsets.only(top: AppSize.defaultPadding / 3),
+      height: 50.0,
+      decoration: BoxDecoration(
+        color: AppColors.background,
+        border: Border.all(
+          color: AppColors.stroke,
+          width: AppSize.defaultStroke,
         ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          GestureDetector(
+            onTap: () {
+              if (doc.extension == "pdf") {
+                final pdfController = PdfController(
+                  document: PdfDocument.openFile(doc.path),
+                );
+
+                Widget pdfView() => PdfView(
+                      controller: pdfController,
+                      documentLoader: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      pageLoader: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => pdfView(),
+                  ),
+                );
+              }
+            },
+            child: Row(
+              children: [
+                const Icon(Icons.picture_as_pdf_rounded),
+                Text(doc.name),
+              ],
+            ),
+          ),
+          const Icon(Icons.delete_outlined),
+        ],
       ),
     );
   }

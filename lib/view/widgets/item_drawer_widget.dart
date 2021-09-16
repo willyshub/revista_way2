@@ -11,36 +11,33 @@ class ItemDrawerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Container(
-        height: AppSize.defaultPadding * 4,
-        child: TextButton(
-          onPressed: fun,
-          style: TextButton.styleFrom(
-            padding: EdgeInsets.zero,
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(AppSize.defaultPadding),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Icon(
-                  icon,
+    return SizedBox(
+      height: AppSize.defaultPadding * 4,
+      child: TextButton(
+        onPressed: fun,
+        style: TextButton.styleFrom(
+          padding: EdgeInsets.zero,
+        ),
+        child: Padding(
+          padding: EdgeInsets.all(AppSize.defaultPadding),
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                color: Colors.grey[800],
+              ),
+              SizedBox(
+                width: AppSize.defaultPadding / 2,
+              ),
+              Text(
+                text,
+                style: TextStyle(
+                  fontSize: 18.0,
                   color: Colors.grey[800],
+                  fontWeight: FontWeight.w600,
                 ),
-                SizedBox(
-                  width: AppSize.defaultPadding / 2,
-                ),
-                Text(
-                  text,
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    color: Colors.grey[800],
-                    fontWeight: FontWeight.w600,
-                  ),
-                )
-              ],
-            ),
+              )
+            ],
           ),
         ),
       ),

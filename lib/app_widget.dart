@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:revista_way2/model/article_model.dart';
+import 'package:flutter/services.dart';
 import 'package:revista_way2/view/pages/article/article_page.dart';
 
 import 'package:revista_way2/view/pages/login/login_page.dart';
@@ -19,6 +19,9 @@ class AppWidget extends StatelessWidget {
   final Future<FirebaseApp> initialization;
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: AppColors.primary,
+    ));
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "RevistaWAY",
