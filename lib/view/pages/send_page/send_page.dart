@@ -1,37 +1,186 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:native_pdf_view/native_pdf_view.dart';
-import 'package:open_file/open_file.dart';
-import 'package:revista_way2/model/doc_model.dart';
-import 'package:revista_way2/theme/app_colors.dart';
+import 'package:provider/provider.dart';
 import 'package:revista_way2/theme/app_size.dart';
 import 'package:revista_way2/theme/app_text_styles.dart';
-import 'package:revista_way2/view-model/send_bloc.dart';
-
+import 'package:revista_way2/view-model/send_vm.dart';
+import '../../widgets/title_widget.dart';
+import 'componentes/button_add_author_widget.dart';
+import 'componentes/button_attach_doc_widget.dart';
+import 'componentes/doc_model_widget.dart';
 import 'componentes/simple_text_field.dart';
-import 'componentes/title_widget.dart';
+
+Widget customSizedBox() => SizedBox(height: AppSize.defaultPadding);
 
 class SendPage extends StatefulWidget {
-  SendPage({Key? key}) : super(key: key);
+  const SendPage({Key? key}) : super(key: key);
 
   @override
   _SendPageState createState() => _SendPageState();
 }
 
 class _SendPageState extends State<SendPage> {
-  SendBloc bloc = SendBloc();
-
   var titleController = TextEditingController();
-  var authorController = TextEditingController();
+  var author1Controller = TextEditingController();
+  var author2Controller = TextEditingController();
+  var author3Controller = TextEditingController();
+  var author4Controller = TextEditingController();
+  var author5Controller = TextEditingController();
+  var abstractController = TextEditingController();
 
   @override
-  void dispose() {
-    bloc.closeStream();
-    super.dispose();
+  void initState() {
+    super.initState();
+    final providerRead = context.read<SendVM>();
+    if (providerRead.listSimpleTextField.isEmpty) {
+      providerRead.addSimpleTextField(
+        SimpleTextField(
+          hintText: "Escreva o nome do autor",
+          textEditingController: author1Controller,
+        ),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final providerRead = context.read<SendVM>();
+    final providerWatch = context.watch<SendVM>();
+    final counterAuthor = providerWatch.listSimpleTextField.length;
+
+    final List<TextEditingController> listAuthorController = [
+      author1Controller,
+      author2Controller,
+      author3Controller,
+      author4Controller,
+      author5Controller,
+    ];
+
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 100.0,
+            pinned: true,
+            centerTitle: true,
+            leading: TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Icon(
+                Icons.arrow_back_ios_rounded,
+                color: Colors.white,
+              ),
+            ),
+            flexibleSpace: FlexibleSpaceBar(
+              centerTitle: true,
+              title: Text(
+                "Enviar arquivo",
+                style: AppTextStyles.titleRegular,
+              ),
+            ),
+          ),
+          SliverList(
+              delegate: SliverChildListDelegate([
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: AppSize.defaultPadding,
+                vertical: AppSize.defaultPadding,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // titulo
+                  customSizedBox(),
+                  const TitleWidget(
+                    title: "Título",
+                  ),
+                  SimpleTextField(
+                    hintText: "Escreva o título do seu artigo",
+                    textEditingController: titleController,
+                  ),
+                  // autores
+                  customSizedBox(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const TitleWidget(
+                        title: "Autores",
+                      ),
+                      Padding(
+                        padding:
+                            EdgeInsets.only(bottom: AppSize.defaultPadding / 2),
+                        child: Text(
+                          "$counterAuthor/5",
+                          style: AppTextStyles.trailingRegular,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Column(
+                    children: providerWatch.listSimpleTextField
+                        .map<Widget>((simpleTextField) => simpleTextField)
+                        .toList(),
+                  ),
+
+                  ButtonAddAuthorWidget(
+                    fun: () {
+                      final textController = listAuthorController[providerRead
+                          .listSimpleTextField.length]; // get the first
+
+                      providerRead.addSimpleTextField(
+                        SimpleTextField(
+                          hintText:
+                              "Escreva o nome do autor ${counterAuthor + 1}",
+                          textEditingController: textController,
+                        ),
+                      );
+                    },
+                  ),
+                  // resumo
+                  customSizedBox(),
+                  const TitleWidget(
+                    title: "Resumo",
+                  ),
+                  SimpleTextField(
+                    hintText: "Escreva seu resumo",
+                    textEditingController: abstractController,
+                    isExpand: true,
+                  ),
+                  Consumer<SendVM>(builder: (context, provider, __) {
+                    final doc = provider.doc;
+                    if (doc == null) {
+                      return Padding(
+                        padding:
+                            EdgeInsets.only(top: AppSize.defaultPadding / 2),
+                        child: ButtonAttachDoc(
+                          function: () async {
+                            await provider.getDoc();
+                          },
+                        ),
+                      );
+                    } else {
+                      return DocWidgetModel(
+                        doc: doc,
+                        funDelete: () {
+                          provider.deleteDoc();
+                        },
+                      );
+                    }
+                  }),
+                ],
+              ),
+            ),
+          ])),
+        ],
+      ),
+    );
+  }
+}
+
+
+
+
+/*
     return SafeArea(
       child: Scaffold(
         body: NestedScrollView(
@@ -119,147 +268,4 @@ class _SendPageState extends State<SendPage> {
         ),
       ),
     );
-  }
-
-  Widget customSizedBox() => SizedBox(height: AppSize.defaultPadding);
-}
-
-class ButtonAttachDoc extends StatelessWidget {
-  const ButtonAttachDoc({
-    Key? key,
-    required this.bloc,
-  }) : super(key: key);
-
-  final SendBloc bloc;
-
-  @override
-  Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: () async {
-        bloc.getDoc();
-      },
-      style: TextButton.styleFrom(padding: EdgeInsets.zero),
-      child: Container(
-        padding: EdgeInsets.all(AppSize.defaultPadding),
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: AppColors.heading,
-            width: AppSize.defaultStroke,
-          ),
-          borderRadius: BorderRadius.circular(5),
-        ),
-        width: AppSize.getWidth(context),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(right: AppSize.defaultPadding / 3),
-              child: const Icon(
-                Icons.attach_file_rounded,
-                color: AppColors.heading,
-              ),
-            ),
-            Text(
-              "Anexar Documento",
-              style: AppTextStyles.titleListTile,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class ButtonAddAuthor extends StatelessWidget {
-  const ButtonAddAuthor({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 50.0,
-      margin: EdgeInsets.only(top: AppSize.defaultPadding / 3),
-      decoration: BoxDecoration(
-        color: AppColors.background,
-        border: Border.all(
-          color: AppColors.stroke,
-          width: AppSize.defaultStroke,
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(right: AppSize.defaultPadding / 3),
-            child: const Icon(
-              Icons.person_add_alt_1_rounded,
-              color: AppColors.stroke,
-            ),
-          ),
-          Text(
-            "Adicionar mais um autor",
-            style: AppTextStyles.input,
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class DocWidgetModel extends StatelessWidget {
-  const DocWidgetModel({Key? key, required this.doc}) : super(key: key);
-  final DocModel doc;
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(top: AppSize.defaultPadding / 3),
-      height: 50.0,
-      decoration: BoxDecoration(
-        color: AppColors.background,
-        border: Border.all(
-          color: AppColors.stroke,
-          width: AppSize.defaultStroke,
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          GestureDetector(
-            onTap: () {
-              if (doc.extension == "pdf") {
-                final pdfController = PdfController(
-                  document: PdfDocument.openFile(doc.path),
-                );
-
-                Widget pdfView() => PdfView(
-                      controller: pdfController,
-                      documentLoader: const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                      pageLoader: const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-                    );
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => pdfView(),
-                  ),
-                );
-              }
-            },
-            child: Row(
-              children: [
-                const Icon(Icons.picture_as_pdf_rounded),
-                Text(doc.name),
-              ],
-            ),
-          ),
-          const Icon(Icons.delete_outlined),
-        ],
-      ),
-    );
-  }
-}
+    */

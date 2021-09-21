@@ -17,6 +17,7 @@ class DocModel {
     );
   }
 
+
   int size;
   String extension;
   String path;

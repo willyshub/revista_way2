@@ -14,7 +14,7 @@ class SimpleTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       controller: textEditingController,
       maxLines: isExpand ? 10 : 1,
       cursorColor: AppColors.primary,
@@ -25,6 +25,7 @@ class SimpleTextField extends StatelessWidget {
         ),
         hintText: hintText,
       ),
+      validator: (text) {},
     );
   }
 }

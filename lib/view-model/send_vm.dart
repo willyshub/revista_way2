@@ -1,24 +1,25 @@
 import 'dart:async';
 
 import 'package:file_picker/file_picker.dart';
+import 'package:revista_way2/exports/my_classes.dart';
 import 'package:revista_way2/model/doc_model.dart';
+import 'package:revista_way2/view/pages/send_page/componentes/simple_text_field.dart';
 
-class SendBloc {
-  final _blocController = StreamController<List<DocModel>>();
+class SendVM extends ChangeNotifier {
+  //
+  //        DOC VIEW-MODEL
+  //
 
-  List<DocModel> _docList = [];
+  DocModel? doc;
 
-  List<DocModel> get docList => _docList;
-
-  Stream<List<DocModel>> get myStream => _blocController.stream;
-
-  void addDocList(DocModel doc) {
-    _docList.add(doc);
-    _blocController.sink.add(docList);
+  void setDoc(DocModel docInternal) {
+    doc = docInternal;
+    notifyListeners();
   }
 
-  void closeStream() {
-    _blocController.close();
+  void deleteDoc() {
+    doc = null;
+    notifyListeners();
   }
 
   Future<DocModel> getDoc() async {
@@ -39,7 +40,7 @@ class SendBloc {
         "path": file.path,
       });
 
-      addDocList(doc);
+      setDoc(doc);
 
       return doc;
     } else {
@@ -53,5 +54,25 @@ class SendBloc {
 
       return doc;
     }
+  }
+
+  //
+  //      LISTAS AUTORES-
+  //
+
+  List<SimpleTextField> listSimpleTextField = [];
+
+  void addSimpleTextField(SimpleTextField value) {
+    final length = listSimpleTextField.length;
+    if (length < 5) {
+      listSimpleTextField.add(value);
+      debugPrint("length: $length");
+      notifyListeners();
+    }
+  }
+
+  void deleteSimpleTextField(SimpleTextField value) {
+    listSimpleTextField.remove(listSimpleTextField.last);
+    notifyListeners();
   }
 }

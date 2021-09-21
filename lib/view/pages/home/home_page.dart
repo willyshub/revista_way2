@@ -5,7 +5,7 @@ import 'package:revista_way2/services/database.dart';
 import 'package:revista_way2/theme/app_colors.dart';
 import 'package:revista_way2/theme/app_size.dart';
 import 'package:revista_way2/theme/app_text_styles.dart';
-import 'package:revista_way2/view/pages/send_page/componentes/title_widget.dart';
+import 'package:revista_way2/view/widgets/title_widget.dart';
 import 'package:revista_way2/view/widgets/custom_drawer_widget.dart';
 
 class HomePage extends StatelessWidget {
@@ -79,44 +79,55 @@ class ListArticles extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
-      
-      separatorBuilder: (_, index){
-        return SizedBox(height: AppSize.defaultPadding * 0.8,);
+      separatorBuilder: (_, index) {
+        return SizedBox(
+          height: AppSize.defaultPadding * 0.8,
+        );
       },
       physics: const NeverScrollableScrollPhysics(),
       padding: EdgeInsets.only(top: AppSize.defaultPadding * 0.8),
       itemCount: 20,
       shrinkWrap: true,
       itemBuilder: (_, index) {
-        return ListTile(
-          onTap: () {
-            Navigator.pushNamed(context, "/article");
-          },
-          title: Text(
-            "Uso de tecnlogia no ambito empresarial",
-            overflow: TextOverflow.ellipsis,
-            style: AppTextStyles.titleListTile,
-          ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: AppSize.defaultPadding * 0.3),
-                child: Text(
-                  "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available",
-                  style: AppTextStyles.trailingRegular,
+        return Card(
+          elevation: 2,
+          child: ListTile(
+            contentPadding: EdgeInsets.all(AppSize.defaultPadding),
+            selectedTileColor: AppColors.primary.withOpacity(0.1),
+            onTap: () {
+              Navigator.pushNamed(context, "/article");
+            },
+            title: Text(
+              "Uso de tecnlogia no ambito empresarial",
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.titleListTile,
+            ),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                    padding: EdgeInsets.only(top: AppSize.defaultPadding * 0.3),
+                    child: Text(
+                      "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available",
+                      style: AppTextStyles.trailingRegular,
+                    )),
+                Padding(
+                  padding: EdgeInsets.only(top: AppSize.defaultPadding * 0.3),
+                  child: RichText(
+                      text: TextSpan(
+                          text: "Autor: ",
+                          style: AppTextStyles.buttonBoldHeading,
+                          children: [
+                        TextSpan(
+                          text: "Andressa",
+                          style: AppTextStyles.buttonHeading,
+                        ),
+                      ])),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: AppSize.defaultPadding * 0.3),
-                child: Text(
-                  "Autor: Andressa",
-                  style: AppTextStyles.buttonHeading,
-                ),
-              ),
-            ],
+              ],
+            ),
+            isThreeLine: true,
           ),
-          isThreeLine: true,
         );
       },
     );
