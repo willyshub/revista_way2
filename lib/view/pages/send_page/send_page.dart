@@ -6,6 +6,7 @@ import 'package:revista_way2/view-model/send_vm.dart';
 import '../../widgets/title_widget.dart';
 import 'componentes/button_add_author_widget.dart';
 import 'componentes/button_attach_doc_widget.dart';
+import 'componentes/button_submit_article_widget.dart';
 import 'componentes/doc_model_widget.dart';
 import 'componentes/simple_text_field.dart';
 
@@ -26,6 +27,7 @@ class _SendPageState extends State<SendPage> {
   var author4Controller = TextEditingController();
   var author5Controller = TextEditingController();
   var abstractController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -34,7 +36,8 @@ class _SendPageState extends State<SendPage> {
     if (providerRead.listSimpleTextField.isEmpty) {
       providerRead.addSimpleTextField(
         SimpleTextField(
-          hintText: "Escreva o nome do autor",
+          index: 2,
+          hintText: "Ex. Fulano de Tal da Silva Souza",
           textEditingController: author1Controller,
         ),
       );
@@ -86,88 +89,108 @@ class _SendPageState extends State<SendPage> {
                 horizontal: AppSize.defaultPadding,
                 vertical: AppSize.defaultPadding,
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // titulo
-                  customSizedBox(),
-                  const TitleWidget(
-                    title: "Título",
-                  ),
-                  SimpleTextField(
-                    hintText: "Escreva o título do seu artigo",
-                    textEditingController: titleController,
-                  ),
-                  // autores
-                  customSizedBox(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const TitleWidget(
-                        title: "Autores",
-                      ),
-                      Padding(
-                        padding:
-                            EdgeInsets.only(bottom: AppSize.defaultPadding / 2),
-                        child: Text(
-                          "$counterAuthor/5",
-                          style: AppTextStyles.trailingRegular,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    customSizedBox(),
+                    const TitleWidget(
+                      title: "Título",
+                    ),
+                    SimpleTextField(
+                      index: 1,
+                      hintText: "Escreva o título do seu artigo",
+                      textEditingController: titleController,
+                    ),
+                    customSizedBox(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const TitleWidget(
+                          title: "Autores",
                         ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    children: providerWatch.listSimpleTextField
-                        .map<Widget>((simpleTextField) => simpleTextField)
-                        .toList(),
-                  ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                              bottom: AppSize.defaultPadding / 2),
+                          child: Text(
+                            "$counterAuthor/5",
+                            style: AppTextStyles.trailingRegular,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: providerWatch.listSimpleTextField
+                          .map<Widget>((simpleTextField) => Column(
+                                children: [
+                                  simpleTextField,
+                                ],
+                              ))
+                          .toList(),
+                    ),
+                    ButtonAddAuthorWidget(
+                      fun: () {
+                        final textController = listAuthorController[providerRead
+                            .listSimpleTextField.length]; // get the first
 
-                  ButtonAddAuthorWidget(
-                    fun: () {
-                      final textController = listAuthorController[providerRead
-                          .listSimpleTextField.length]; // get the first
-
-                      providerRead.addSimpleTextField(
-                        SimpleTextField(
-                          hintText:
-                              "Escreva o nome do autor ${counterAuthor + 1}",
-                          textEditingController: textController,
-                        ),
-                      );
-                    },
-                  ),
-                  // resumo
-                  customSizedBox(),
-                  const TitleWidget(
-                    title: "Resumo",
-                  ),
-                  SimpleTextField(
-                    hintText: "Escreva seu resumo",
-                    textEditingController: abstractController,
-                    isExpand: true,
-                  ),
-                  Consumer<SendVM>(builder: (context, provider, __) {
-                    final doc = provider.doc;
-                    if (doc == null) {
-                      return Padding(
-                        padding:
-                            EdgeInsets.only(top: AppSize.defaultPadding / 2),
-                        child: ButtonAttachDoc(
-                          function: () async {
-                            await provider.getDoc();
-                          },
-                        ),
-                      );
-                    } else {
-                      return DocWidgetModel(
-                        doc: doc,
-                        funDelete: () {
-                          provider.deleteDoc();
-                        },
-                      );
-                    }
-                  }),
-                ],
+                        providerRead.addSimpleTextField(
+                          SimpleTextField(
+                            index: 2,
+                            hintText:
+                                "Ex. Fulano de Tal da Silva Souza ${counterAuthor + 1}",
+                            textEditingController: textController,
+                          ),
+                        );
+                      },
+                    ),
+                    customSizedBox(),
+                    const TitleWidget(
+                      title: "Resumo",
+                    ),
+                    SimpleTextField(
+                      index: 3,
+                      hintText: "Escreva seu resumo",
+                      textEditingController: abstractController,
+                      isExpand: true,
+                    ),
+                    Consumer<SendVM>(
+                      builder: (context, provider, __) {
+                        final doc = provider.doc;
+                        if (doc == null) {
+                          return Padding(
+                              padding: EdgeInsets.only(
+                                  top: AppSize.defaultPadding / 2),
+                              child: ButtonAttachDoc(
+                                function: () async {
+                                  await provider.getDoc();
+                                },
+                              ));
+                        } else {
+                          return DocWidgetModel(
+                            doc: doc,
+                            funDelete: () {
+                              provider.deleteDoc();
+                            },
+                          );
+                        }
+                      },
+                    ),
+                    ButtonSubmitArticleWidget(
+                      function: () {
+                        if (_formKey.currentState!.validate()) {
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              backgroundColor: Colors.red,
+                              content: Text(
+                                "Campos inválidos",
+                                style: AppTextStyles.buttonBoldHeading,
+                              )));
+                        }
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ])),

@@ -8,12 +8,9 @@ class TitleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: AppSize.defaultPadding / 2),
-      child: Text(
-        title,
-        style: AppTextStyles.titleBoldHeading,
-      ),
+    return Text(
+      title,
+      style: AppTextStyles.titleBoldHeading,
     );
   }
 }
