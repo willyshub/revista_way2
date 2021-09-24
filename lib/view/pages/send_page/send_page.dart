@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:revista_way2/model/article_model.dart';
+import 'package:revista_way2/model/doc_model.dart';
 import 'package:revista_way2/theme/app_size.dart';
 import 'package:revista_way2/theme/app_text_styles.dart';
 import 'package:revista_way2/view-model/send_vm.dart';
@@ -20,12 +22,15 @@ class SendPage extends StatefulWidget {
 }
 
 class _SendPageState extends State<SendPage> {
+  //
   var titleController = TextEditingController();
+  //
   var author1Controller = TextEditingController();
   var author2Controller = TextEditingController();
   var author3Controller = TextEditingController();
   var author4Controller = TextEditingController();
   var author5Controller = TextEditingController();
+  //
   var abstractController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
@@ -78,7 +83,7 @@ class _SendPageState extends State<SendPage> {
               centerTitle: true,
               title: Text(
                 "Enviar arquivo",
-                style: AppTextStyles.titleRegular,
+                style: AppTextStyles.titleRegular, 
               ),
             ),
           ),
@@ -177,15 +182,43 @@ class _SendPageState extends State<SendPage> {
                       },
                     ),
                     ButtonSubmitArticleWidget(
-                      function: () {
+                      function: () async {
                         if (_formKey.currentState!.validate()) {
+                          final docModel = Provider.of<SendVM>(context, listen: false).doc;
+                          // Deu tudo certo
+                          final articleInstance = Article.fromMap({
+                            "title": titleController.text,
+                            "authors": [
+                              author1Controller.text,
+                              author2Controller.text,
+                              author3Controller.text,
+                              author4Controller.text,
+                              author5Controller.text,
+                            ],
+                            "abstract": abstractController.text,
+                            "doc": {
+                              "name": docModel!.name,
+                              "size": docModel.size,
+                              "extension": docModel.extension,
+                              "path": docModel.path,
+                            },
+                            "ref": [
+                              "Test1",
+                              "Test2",
+                              "Test3",
+                              "Test4",
+                              "Test5",
+                            ],
+                          });
+                          print(articleInstance);
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              backgroundColor: Colors.red,
-                              content: Text(
-                                "Campos inválidos",
-                                style: AppTextStyles.buttonBoldHeading,
-                              )));
+                            backgroundColor: Colors.red,
+                            content: Text(
+                              "Campos inválidos",
+                              style: AppTextStyles.buttonBoldHeading,
+                            ),
+                          ));
                         }
                       },
                     ),

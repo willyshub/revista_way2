@@ -1,14 +1,12 @@
-import 'dart:async';
-
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:revista_way2/exports/my_classes.dart';
 import 'package:revista_way2/model/doc_model.dart';
 import 'package:revista_way2/view/pages/send_page/componentes/simple_text_field.dart';
 
 class SendVM extends ChangeNotifier {
-  //
-  //        DOC VIEW-MODEL
-  //
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+  /* [DOC VIEW-MODEL] */
 
   DocModel? doc;
 
