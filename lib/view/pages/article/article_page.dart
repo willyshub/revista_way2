@@ -8,8 +8,8 @@ import '/exports/my_classes.dart';
 import 'components/button_icon_text.dart';
 
 class ArticlePage extends StatelessWidget {
-  ArticlePage({Key? key, this.article}) : super(key: key);
-  final Article? article;
+  ArticlePage({Key? key, required this.article}) : super(key: key);
+  final Article article;
 
   final List<String> authorsLocal = [
     "Wilys Silva dos Santos Pereira",
@@ -69,11 +69,11 @@ class ArticlePage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const TitleWidget(
-                        title: "O uso da tecnologia no contexto empresarial",
+                      TitleWidget(
+                        title: article.title,
                       ),
                       Text(
-                        "Lorem ipsum dolor sit amet. 33 similique ullam non repellendus minus eum voluptatem provident ut tempore debitis qui nihil omnis est odio dolorum. Et inventore aliquid ut rerum consectetur et natus consequatur.Eos fugiat tempora ea sapiente suscipit eum temporibus quod hic soluta corporis ut animi officiis id libero numquam. Sed minima suscipit ut quaerat tempore in fugit distinctio. Et aspernatur quisquam aut numquam sunt vel explicabo omnis ut odio dignissimos aut molestiae commodi.Rem explicabo quia non voluptas commodi quo nemo quae sit nisi repellat. Ea animi debitis aut quae aspernatur 33 error velit est debitis eaque.",
+                        article.abstract,
                         style: AppTextStyles.trailingRegular,
                       ),
                       Padding(
@@ -106,7 +106,7 @@ class ArticlePage extends StatelessWidget {
                         style: AppTextStyles.buttonBoldHeading,
                       ),
                       Column(
-                        children: authorsLocal
+                        children: article.authors
                             .map(
                               (name) => Text(
                                 name,
@@ -123,7 +123,7 @@ class ArticlePage extends StatelessWidget {
                         style: AppTextStyles.buttonBoldHeading,
                       ),
                       Column(
-                        children: refsLocal
+                        children: article.ref
                             .map(
                               (name) => Text(
                                 name,

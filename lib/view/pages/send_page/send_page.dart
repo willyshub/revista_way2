@@ -1,9 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:revista_way2/model/article_model.dart';
-import 'package:revista_way2/model/doc_model.dart';
 import 'package:revista_way2/theme/app_size.dart';
 import 'package:revista_way2/theme/app_text_styles.dart';
+import 'package:revista_way2/view-model/auth/auth_firebase.dart';
 import 'package:revista_way2/view-model/send_vm.dart';
 import '../../widgets/title_widget.dart';
 import 'componentes/button_add_author_widget.dart';
@@ -83,7 +84,7 @@ class _SendPageState extends State<SendPage> {
               centerTitle: true,
               title: Text(
                 "Enviar arquivo",
-                style: AppTextStyles.titleRegular, 
+                style: AppTextStyles.titleRegular,
               ),
             ),
           ),
@@ -184,10 +185,13 @@ class _SendPageState extends State<SendPage> {
                     ButtonSubmitArticleWidget(
                       function: () async {
                         if (_formKey.currentState!.validate()) {
-                          final docModel = Provider.of<SendVM>(context, listen: false).doc;
+                          final User? user = FirebaseAuth.instance.currentUser;
+                          final providerSend =
+                              Provider.of<SendVM>(context, listen: false);
                           // Deu tudo certo
                           final articleInstance = Article.fromMap({
                             "title": titleController.text,
+                            "userUid": user!.uid,
                             "authors": [
                               author1Controller.text,
                               author2Controller.text,
@@ -196,12 +200,6 @@ class _SendPageState extends State<SendPage> {
                               author5Controller.text,
                             ],
                             "abstract": abstractController.text,
-                            "doc": {
-                              "name": docModel!.name,
-                              "size": docModel.size,
-                              "extension": docModel.extension,
-                              "path": docModel.path,
-                            },
                             "ref": [
                               "Test1",
                               "Test2",
@@ -210,7 +208,11 @@ class _SendPageState extends State<SendPage> {
                               "Test5",
                             ],
                           });
-                          print(articleInstance);
+                          await providerRead.uploadDoc(
+                              providerRead.doc!, context);
+                          await providerRead.sendArticle(
+                              articleInstance); // enviando arquivo
+                          Navigator.pop(context);
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             backgroundColor: Colors.red,

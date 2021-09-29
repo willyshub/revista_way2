@@ -27,12 +27,13 @@ class AppWidget extends StatelessWidget {
         splashColor: AppColors.primary,
       ),
       initialRoute: "/splash",
+
       routes: {
         "/home": (context) => HomePage(),
         "/splash": (context) => SplashPage(),
         "/login": (context) => LoginPage(),
         "/send": (context) => const Material(child: SendPage()),
-        "/article": (context) =>  ArticlePage(),
+        //"/article": (context) =>  ArticlePage(),
       },
       // home: SplashPage(),
       // //home: LoginPage(),

@@ -7,39 +7,66 @@ import '../../../theme/app_size.dart';
 class SplashPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 4), () {
       Navigator.pushReplacementNamed(context, '/home');
     });
-    return splash();
+    return splash(context);
   }
 }
 
-Scaffold splash() => Scaffold(
-      backgroundColor: AppColors.primary,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            RichText(
-              text: const TextSpan(
-                text: 'Revista',
-                style: TextStyle(fontWeight: FontWeight.w800, fontSize: 50.0),
-                children: [
-                  TextSpan(
-                    text: 'WAY',
-                    style: TextStyle(fontWeight: FontWeight.w300),
-                  ),
-                ],
+Scaffold splash(BuildContext context) => Scaffold(
+      body: Stack(
+        children: [
+          Container(
+            height: AppSize.getHeight(context),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.bottomRight,
+                  end: Alignment.topLeft,
+                  colors: [
+                  /*   AppColors.primary.withOpacity(0.7),
+                    AppColors.primary.withOpacity(0.8),
+                    AppColors.primary.withOpacity(0.9),
+                    AppColors.primary.withOpacity(0.8),
+                    AppColors.primary.withOpacity(0.7),
+                    AppColors.primary.withOpacity(0.8), */
+                    AppColors.primary.withOpacity(0.6),
+                    AppColors.primary,
+                  ]),
+            ),
+          ),
+          /* RichText(
+            text: const TextSpan(
+              text: 'Revista',
+              style: TextStyle(fontWeight: FontWeight.w800, fontSize: 50.0),
+              children: [
+                TextSpan(
+                  text: 'WAY',
+                  style: TextStyle(fontWeight: FontWeight.w300),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: AppSize.defaultPadding,
+          ), */
+          Center(
+            child: Image.asset(
+              'assets/images/logo.png',
+              filterQuality: FilterQuality.high,
+              height: 300.0,
+            ),
+          ),
+          Center(
+            child: Container(
+              height: 285,
+              width: 285,
+              child: const CircularProgressIndicator(
+                strokeWidth: 1.5,
+                color: Colors.white,
               ),
             ),
-            SizedBox(
-              height: AppSize.defaultPadding,
-            ),
-            const CircularProgressIndicator(
-              strokeWidth: 1.5,
-              color: Colors.white,
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );

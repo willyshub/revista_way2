@@ -17,22 +17,22 @@ class CustomDrawerWidget extends StatelessWidget {
           ItemDrawerWidget(
             fun: () {},
             icon: Icons.notes,
-            text: "Sobre",
+            text: "Sobre (Em breve)",
           ),
           ItemDrawerWidget(
             fun: () {},
             icon: Icons.contacts,
-            text: "Contatos",
+            text: "Contatos (Em breve)",
           ),
           ItemDrawerWidget(
             fun: () {},
             icon: Icons.bookmarks_rounded,
-            text: "Meus artigos",
+            text: "Meus artigos (Em breve)",
           ),
           ItemDrawerWidget(
             fun: () {},
             icon: Icons.admin_panel_settings,
-            text: "Painel ADM",
+            text: "Painel ADM (Em breve)",
           ),
         ],
       ),

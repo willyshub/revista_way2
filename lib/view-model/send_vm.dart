@@ -1,7 +1,13 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:provider/provider.dart';
 import 'package:revista_way2/exports/my_classes.dart';
 import 'package:revista_way2/model/doc_model.dart';
+import 'package:revista_way2/view-model/auth/auth_firebase.dart';
 import 'package:revista_way2/view/pages/send_page/componentes/simple_text_field.dart';
 
 class SendVM extends ChangeNotifier {
@@ -20,11 +26,34 @@ class SendVM extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> uploadDoc(DocModel docmodel, BuildContext context) async {
+    final file = File(docmodel.path!);
+    final User? user = FirebaseAuth.instance.currentUser;
+    final providerUser = Provider.of<AuthFirebase>(context, listen: false);
+    try {
+      final ref =
+          'articles_docs//doc-${docmodel.name}-${user!.uid}.${docmodel.typeFile}';
+      _storage.ref(ref).putFile(file);
+    } on FirebaseException catch (e) {
+      throw Exception("Error no upload: ${e.code}");
+    }
+  }
+
+  Future<void> sendArticle(Article article) async {
+    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+    _firestore
+        .collection('articles_peding')
+        .add(article.toMap())
+        .whenComplete(() => debugPrint("article was sent"))
+        .catchError((e) => debugPrint(e.toString()));
+  }
+
   Future<DocModel> getDoc() async {
     //await Future.delayed(Duration(seconds: 10));
     final FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ['pdf'],
+      allowedExtensions: ['doc', "docx"],
       allowCompression: false,
     );
 
@@ -34,8 +63,9 @@ class SendVM extends ChangeNotifier {
       final DocModel doc = DocModel.fromMap({
         "size": file.size,
         "name": file.name,
-        "extension": file.extension,
+        "typeFile": file.extension,
         "path": file.path,
+        "file": File(file.path!)
       });
 
       setDoc(doc);

@@ -1,11 +1,12 @@
-import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 import 'package:revista_way2/services/database.dart';
 import 'package:revista_way2/theme/app_colors.dart';
 import 'package:revista_way2/theme/app_size.dart';
 import 'package:revista_way2/theme/app_text_styles.dart';
-import 'package:revista_way2/view/widgets/title_widget.dart';
+import 'package:revista_way2/view-model/home_vm.dart';
+import 'package:revista_way2/view/pages/article/article_page.dart';
 import 'package:revista_way2/view/widgets/custom_drawer_widget.dart';
 
 class HomePage extends StatelessWidget {
@@ -60,8 +61,14 @@ class HomePage extends StatelessWidget {
           onPressed: () {},
           backgroundColor: AppColors.primary,
           child: IconButton(
-            onPressed: () {
-              Navigator.pushNamed(context, "/send");
+            onPressed: () async {
+              final User? user = FirebaseAuth.instance.currentUser;
+              if (user != user) {
+                Navigator.pushNamed(context, "/send");
+              } else {
+                await Navigator.pushNamed(context, "/login")
+                    .then((value) => Navigator.pushReplacementNamed(context, "/send"));
+              }
             },
             icon: const Icon(Icons.upload_rounded),
           ),
@@ -78,6 +85,8 @@ class ListArticles extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<HomeVM>(context, listen: false);
+
     return ListView.separated(
       separatorBuilder: (_, index) {
         return SizedBox(
@@ -86,7 +95,7 @@ class ListArticles extends StatelessWidget {
       },
       physics: const NeverScrollableScrollPhysics(),
       padding: EdgeInsets.only(top: AppSize.defaultPadding * 0.8),
-      itemCount: 20,
+      itemCount: provider.allArticles.length,
       shrinkWrap: true,
       itemBuilder: (_, index) {
         return Card(
@@ -95,10 +104,14 @@ class ListArticles extends StatelessWidget {
             contentPadding: EdgeInsets.all(AppSize.defaultPadding),
             selectedTileColor: AppColors.primary.withOpacity(0.1),
             onTap: () {
-              Navigator.pushNamed(context, "/article");
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          ArticlePage(article: provider.allArticles[index])));
             },
             title: Text(
-              "Uso de tecnlogia no ambito empresarial",
+              provider.allArticles[index].title,
               overflow: TextOverflow.ellipsis,
               style: AppTextStyles.titleListTile,
             ),
@@ -108,7 +121,9 @@ class ListArticles extends StatelessWidget {
                 Padding(
                     padding: EdgeInsets.only(top: AppSize.defaultPadding * 0.3),
                     child: Text(
-                      "In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available",
+                      provider.allArticles[index].abstract,
+                      maxLines: 5,
+                      overflow: TextOverflow.ellipsis,
                       style: AppTextStyles.trailingRegular,
                     )),
                 Padding(
@@ -119,7 +134,7 @@ class ListArticles extends StatelessWidget {
                           style: AppTextStyles.buttonBoldHeading,
                           children: [
                         TextSpan(
-                          text: "Andressa",
+                          text: provider.allArticles[index].authors[1],
                           style: AppTextStyles.buttonHeading,
                         ),
                       ])),

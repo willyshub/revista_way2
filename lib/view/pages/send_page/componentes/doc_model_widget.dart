@@ -28,9 +28,9 @@ class DocWidgetModel extends StatelessWidget {
           Expanded(
             child: GestureDetector(
               onTap: () {
-                if (doc.extension == "pdf") {
+               /*  if (doc.typeFile == "doc" || doc.typeFile == "docx") {
                   final pdfController = PdfController(
-                    document: PdfDocument.openFile(doc.path),
+                    document: PdfDocument.openFile(doc.path!),
                   );
 
                   Widget pdfView() => PdfView(
@@ -49,7 +49,7 @@ class DocWidgetModel extends StatelessWidget {
                       builder: (context) => pdfView(),
                     ),
                   );
-                }
+                } */
               },
               child: Container(
                 margin: EdgeInsets.all(AppSize.defaultPadding),
