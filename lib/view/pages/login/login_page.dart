@@ -17,82 +17,64 @@ class LoginPage extends StatelessWidget {
 }
 
 Widget body(BuildContext context) {
-  return Container(
-    padding: EdgeInsets.symmetric(horizontal: AppSize.defaultPadding * 2),
-    child: SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(right: AppSize.defaultPadding),
-                  child: Image.asset(
-                    'assets/images/logo.png',
-                    filterQuality: FilterQuality.high,
-                    height: 300.0,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          FutureBuilder(
-            future: AuthFirebase.initializeFirebase(context),
-            builder: (context, snapshot) {
-              if (snapshot.hasError) {
-                return const Text('Erro ao inicializar o Firebase');
-              } else if (snapshot.connectionState == ConnectionState.done) {
-                return GoogleSignInButton();
-              }
-              return const CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(
-                  AppColors.body,
-                ),
-              );
-            },
-          ),
-        ],
+  return Stack(
+    alignment: Alignment.center,
+    children: [
+      Container(
+        height: AppSize.getHeight(context),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+              begin: Alignment.bottomRight,
+              end: Alignment.topLeft,
+              colors: [
+                AppColors.primary.withOpacity(0.6),
+                AppColors.primary,
+              ]),
+        ),
       ),
-    ),
+      Container(
+        padding: EdgeInsets.symmetric(horizontal: AppSize.defaultPadding * 2),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(right: AppSize.defaultPadding),
+                      child: Image.asset(
+                        'assets/images/logo.png',
+                        filterQuality: FilterQuality.high,
+                        height: 300.0,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              FutureBuilder(
+                future: AuthFirebase.initializeFirebase(context),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return const Text('Erro ao inicializar o Firebase');
+                  } else if (snapshot.connectionState == ConnectionState.done) {
+                    return GoogleSignInButton();
+                  }
+                  return const CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      AppColors.body,
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    ],
   );
 }
-
-class AutocompleteForm extends StatelessWidget {
-  const AutocompleteForm({
-    Key? key,
-  }) : super(key: key);
-
-  static const List<String> _userOptions = [
-    "oi",
-    "Universidade Federal do Vale do São Francisco",
-  ];
-
-  static String _displayStringForOption(String option) => option;
-
-  @override
-  Widget build(BuildContext context) {
-    return Autocomplete<String>(
-      displayStringForOption: _displayStringForOption,
-      optionsBuilder: (TextEditingValue textEditingValue) {
-        if (textEditingValue.text == '') {
-          return const Iterable<String>.empty();
-        }
-        return _userOptions.where((String option) {
-          return option.toString().toLowerCase().contains(
-                textEditingValue.text.toLowerCase(),
-              );
-        });
-      },
-      onSelected: (String selection) {
-        print('You just selected ${_displayStringForOption(selection)}');
-      },
-    );
-  }
-}
-
-
 
    // fieldViewBuilder: (
       //   context,

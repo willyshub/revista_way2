@@ -1,19 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:revista_way2/view/pages/user_info/user_info_page.dart';
 
 class AuthFirebase extends ChangeNotifier {
-  User? _user;
-  
-
-  void setUser(User? userAux) {
-    _user = userAux;
-    notifyListeners();
+  static Future<User?> currentUser() async {
+    await Firebase.initializeApp();
+    final user = FirebaseAuth.instance.currentUser;
+    return user;
   }
-
-  bool get isLoggedIn => _user != null;
 
   static Future<FirebaseApp> initializeFirebase(BuildContext? context) async {
     final FirebaseApp firebaseApp = await Firebase.initializeApp();
@@ -30,10 +27,6 @@ class AuthFirebase extends ChangeNotifier {
       );
     }
 
-    AuthFirebase authFirebase = AuthFirebase();
-    authFirebase.setUser(user);
-
-    
     return firebaseApp;
   }
 
@@ -86,8 +79,6 @@ class AuthFirebase extends ChangeNotifier {
       }
     }
 
-    final authFirebase = AuthFirebase();
-    authFirebase.setUser(user);
     return user;
   }
 
@@ -95,7 +86,6 @@ class AuthFirebase extends ChangeNotifier {
     try {
       await FirebaseAuth.instance.signOut();
       final authFirebase = AuthFirebase();
-      authFirebase.setUser(null);
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         customSnackBar(

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 
@@ -8,44 +7,56 @@ class Article {
     this.id,
     required this.userUid,
     required this.title,
+    required this.isApproved,
     required this.authors,
     required this.abstract,
-    required this.ref,
+
     //required this.doc,
   });
 
   factory Article.fromJson(String source) =>
       Article.fromMap(json.decode(source) as Map<String, dynamic>);
 
-  factory Article.fromMap(Map<String, dynamic> map) {
-    return Article(
-      title: map['title']! as String,
-      userUid: map['userUid']! as String,
-      authors: List<String>.from(map['authors']! as List<String>),
-      abstract: map['abstract'] as String,
-      // doc: DocModel.fromMap(map['doc'] as Map<String, dynamic>),
-      ref: List<String>.from(map['ref']! as List<String>),
-    );
+  factory Article.fromMap(Map<String, dynamic> map, {bool hasId = false}) {
+    if (hasId) {
+      return Article(
+        id: map['id'] as String,
+        isApproved: map['isApproved'] as bool,
+        title: map['title']! as String,
+        userUid: map['userUid']! as String,
+        authors: List<String>.from(map['authors']! as List<String>),
+        abstract: map['abstract'] as String,
+      );
+    } else {
+      return Article(
+        title: map['title']! as String,
+        isApproved: map['isApproved'] as bool,
+        userUid: map['userUid']! as String,
+        authors: List<String>.from(map['authors']! as List<String>),
+        abstract: map['abstract'] as String,
+      );
+    }
   }
 
   factory Article.fromDocument(DocumentSnapshot document) {
     return Article(
       id: document.id,
       userUid: document['userUid'] as String,
+      isApproved: document['isApproved'] as bool,
       title: document['title'] as String,
       authors: List<String>.from(document['authors'] as List<dynamic>),
       abstract: document['abstract'] as String,
       //doc: DocModel.fromMap(document['doc'] as Map<String, dynamic>),
-      ref: List<String>.from(document['ref'] as List<dynamic>),
     );
   }
 
   String? id;
   String title;
   String? userUid;
+  bool isApproved;
   List<String> authors;
   String abstract;
-  List<String> ref;
+
   //DocModel doc;
 
   /*  Article copyWith({
@@ -73,7 +84,6 @@ class Article {
       'userUid': userUid,
       'authors': authors,
       'abstract': abstract,
-      'ref': ref,
       //'doc': doc.toMap(),
     };
   }
@@ -82,27 +92,6 @@ class Article {
 
   @override
   String toString() {
-    return 'Article(title: $title, authors: $authors, abstract: $abstract,  ref: $ref)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is Article &&
-        other.title == title &&
-        listEquals(other.authors, authors) &&
-        other.abstract == abstract &&
-        //other.doc == doc &&
-        listEquals(other.ref, ref);
-  }
-
-  @override
-  int get hashCode {
-    return title.hashCode ^
-        authors.hashCode ^
-        abstract.hashCode ^
-        //doc.hashCode ^
-        ref.hashCode;
+    return 'Article(title: $title, authors: $authors, abstract: $abstract,)';
   }
 }

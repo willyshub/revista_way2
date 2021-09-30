@@ -31,6 +31,7 @@ class ItemDrawerWidget extends StatelessWidget {
               ),
               Text(
                 text,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontSize: 18.0,
                   color: Colors.grey[800],

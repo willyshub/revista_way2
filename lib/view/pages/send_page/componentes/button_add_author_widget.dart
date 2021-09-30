@@ -41,6 +41,7 @@ class ButtonAddAuthorWidget extends StatelessWidget {
               ),
               Text(
                 "Adicionar mais um autor",
+                overflow: TextOverflow.ellipsis,
                 style: length == 5
                     ? AppTextStyles.input
                     : AppTextStyles.buttonBoldGray,

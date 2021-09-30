@@ -7,17 +7,27 @@ class HomeVM extends ChangeNotifier {
     loadAllArticles();
   }
 
+  void changeNotifier() {
+    loadAllArticles();
+    notifyListeners();
+  }
+
   List<Article> allArticles = [];
 
-  Future<void> loadAllArticles() async {
+  Future<QuerySnapshot> loadAllArticles() async {
     final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-    final QuerySnapshot<Map<String, dynamic>> snapArticles =
-        await _firestore.collection('articles_peding').get();
+    await Future.delayed(const Duration(seconds: 1));
+
+    final QuerySnapshot<Map<String, dynamic>> snapArticles = await _firestore
+        .collection('articles_peding')
+        .where("isApproved", isEqualTo: true)
+        .get();
     debugPrint(snapArticles.toString());
     allArticles = snapArticles.docs
         .map((articleItem) => Article.fromDocument(articleItem))
         .toList();
     notifyListeners();
+    return snapArticles;
   }
 }

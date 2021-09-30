@@ -90,6 +90,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
               SizedBox(height: 16.0),
               Text(
                 'Hello',
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: AppColors.background,
                   fontSize: 26,
@@ -106,6 +107,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
               SizedBox(height: 8.0),
               Text(
                 '( ${_user.email!} )',
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: AppColors.background,
                   fontSize: 20,
@@ -115,6 +117,7 @@ class _UserInfoPageState extends State<UserInfoPage> {
               SizedBox(height: 24.0),
               Text(
                 'You are now signed in using your Google account. To sign out of your account, click the "Sign Out" button below.',
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                     color: AppColors.primary.withOpacity(0.8),
                     fontSize: 14,

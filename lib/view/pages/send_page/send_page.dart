@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:revista_way2/model/article_model.dart';
 import 'package:revista_way2/theme/app_size.dart';
 import 'package:revista_way2/theme/app_text_styles.dart';
-import 'package:revista_way2/view-model/auth/auth_firebase.dart';
 import 'package:revista_way2/view-model/send_vm.dart';
 import '../../widgets/title_widget.dart';
 import 'componentes/button_add_author_widget.dart';
@@ -12,6 +11,8 @@ import 'componentes/button_attach_doc_widget.dart';
 import 'componentes/button_submit_article_widget.dart';
 import 'componentes/doc_model_widget.dart';
 import 'componentes/simple_text_field.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:revista_way2/view-model/auth/auth_firebase.dart';
 
 Widget customSizedBox() => SizedBox(height: AppSize.defaultPadding);
 
@@ -33,6 +34,12 @@ class _SendPageState extends State<SendPage> {
   var author5Controller = TextEditingController();
   //
   var abstractController = TextEditingController();
+  //
+  var ref1Controller = TextEditingController();
+  var ref2Controller = TextEditingController();
+  var ref3Controller = TextEditingController();
+  var ref4Controller = TextEditingController();
+  var ref5Controller = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -64,6 +71,14 @@ class _SendPageState extends State<SendPage> {
       author5Controller,
     ];
 
+    final List<TextEditingController> listRefController = [
+      ref1Controller,
+      ref2Controller,
+      ref3Controller,
+      ref4Controller,
+      ref5Controller,
+    ];
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -84,6 +99,7 @@ class _SendPageState extends State<SendPage> {
               centerTitle: true,
               title: Text(
                 "Enviar arquivo",
+                overflow: TextOverflow.ellipsis,
                 style: AppTextStyles.titleRegular,
               ),
             ),
@@ -186,12 +202,11 @@ class _SendPageState extends State<SendPage> {
                       function: () async {
                         if (_formKey.currentState!.validate()) {
                           final User? user = FirebaseAuth.instance.currentUser;
-                          final providerSend =
-                              Provider.of<SendVM>(context, listen: false);
-                          // Deu tudo certo
+
                           final articleInstance = Article.fromMap({
                             "title": titleController.text,
                             "userUid": user!.uid,
+                            "isApproved": false,
                             "authors": [
                               author1Controller.text,
                               author2Controller.text,
@@ -200,24 +215,21 @@ class _SendPageState extends State<SendPage> {
                               author5Controller.text,
                             ],
                             "abstract": abstractController.text,
-                            "ref": [
-                              "Test1",
-                              "Test2",
-                              "Test3",
-                              "Test4",
-                              "Test5",
-                            ],
                           });
                           await providerRead.uploadDoc(
-                              providerRead.doc!, context);
-                          await providerRead.sendArticle(
-                              articleInstance); // enviando arquivo
+                            docmodel: providerRead.doc!,
+                            context: context,
+                            nameArticle: titleController.text,
+                          );
+                          await providerRead
+                              .sendArticle(articleInstance); // enviando arquivo
                           Navigator.pop(context);
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             backgroundColor: Colors.red,
                             content: Text(
                               "Campos inválidos",
+                              overflow: TextOverflow.ellipsis,
                               style: AppTextStyles.buttonBoldHeading,
                             ),
                           ));

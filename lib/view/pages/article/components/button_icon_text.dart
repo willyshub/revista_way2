@@ -43,6 +43,7 @@ class ButtonIconTextWidget extends StatelessWidget {
             ),
             Text(
               text,
+              overflow: TextOverflow.ellipsis,
               style: AppTextStyles.buttonGray,
             ),
           ],

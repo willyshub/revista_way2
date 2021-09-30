@@ -26,13 +26,17 @@ class SendVM extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> uploadDoc(DocModel docmodel, BuildContext context) async {
+  Future<void> uploadDoc({
+    required DocModel docmodel,
+    required BuildContext context,
+    required String nameArticle,
+  }) async {
     final file = File(docmodel.path!);
     final User? user = FirebaseAuth.instance.currentUser;
     final providerUser = Provider.of<AuthFirebase>(context, listen: false);
     try {
       final ref =
-          'articles_docs//doc-${docmodel.name}-${user!.uid}.${docmodel.typeFile}';
+          'articles_docs//doc-$nameArticle-${user!.uid}.${docmodel.typeFile}';
       _storage.ref(ref).putFile(file);
     } on FirebaseException catch (e) {
       throw Exception("Error no upload: ${e.code}");

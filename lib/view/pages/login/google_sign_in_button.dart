@@ -16,7 +16,7 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: _isSigningIn
-          ? CircularProgressIndicator(
+          ? const CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
             )
           : OutlinedButton(
@@ -33,7 +33,7 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
                   _isSigningIn = true;
                 });
 
-                User? user =
+                final User? user =
                     await AuthFirebase.signInWithGoogle(context: context);
 
                 setState(() {
@@ -64,6 +64,7 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
                       padding: EdgeInsets.only(left: 10),
                       child: Text(
                         'Cadastrar-se com o Google',
+                        overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 20,
                           color: Colors.black54,

@@ -32,7 +32,7 @@ class AppWidget extends StatelessWidget {
         "/home": (context) => HomePage(),
         "/splash": (context) => SplashPage(),
         "/login": (context) => LoginPage(),
-        "/send": (context) => const Material(child: SendPage()),
+        "/send": (context) => SendPage(),
         //"/article": (context) =>  ArticlePage(),
       },
       // home: SplashPage(),

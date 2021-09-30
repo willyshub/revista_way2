@@ -59,6 +59,7 @@ class DocWidgetModel extends StatelessWidget {
                     SizedBox(width: AppSize.defaultPadding / 3),
                     Text(
                       doc.name,
+                      overflow: TextOverflow.ellipsis,
                       style: AppTextStyles.buttonHeading,
                     ),
                   ],

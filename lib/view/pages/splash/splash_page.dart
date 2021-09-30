@@ -7,7 +7,7 @@ import '../../../theme/app_size.dart';
 class SplashPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Future.delayed(const Duration(seconds: 4), () {
+    Future.delayed(const Duration(seconds: 2), () {
       Navigator.pushReplacementNamed(context, '/home');
     });
     return splash(context);
@@ -24,12 +24,6 @@ Scaffold splash(BuildContext context) => Scaffold(
                   begin: Alignment.bottomRight,
                   end: Alignment.topLeft,
                   colors: [
-                  /*   AppColors.primary.withOpacity(0.7),
-                    AppColors.primary.withOpacity(0.8),
-                    AppColors.primary.withOpacity(0.9),
-                    AppColors.primary.withOpacity(0.8),
-                    AppColors.primary.withOpacity(0.7),
-                    AppColors.primary.withOpacity(0.8), */
                     AppColors.primary.withOpacity(0.6),
                     AppColors.primary,
                   ]),

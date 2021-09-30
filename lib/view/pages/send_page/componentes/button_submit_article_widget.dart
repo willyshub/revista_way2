@@ -26,6 +26,7 @@ class ButtonSubmitArticleWidget extends StatelessWidget {
         child: Center(
           child: Text(
             "Enviar",
+            overflow: TextOverflow.ellipsis,
             style: AppTextStyles.titleBoldBackground,
           ),
         ),
