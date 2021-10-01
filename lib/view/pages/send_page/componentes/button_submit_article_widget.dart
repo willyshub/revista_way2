@@ -7,6 +7,7 @@ class ButtonSubmitArticleWidget extends StatelessWidget {
     required VoidCallback this.function,
   }) : super(key: key);
 
+  
   final VoidCallback function;
 
   @override

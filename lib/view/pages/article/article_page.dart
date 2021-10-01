@@ -32,12 +32,15 @@ class _ArticlePageState extends State<ArticlePage> {
     final user = await AuthFirebase.currentUser();
     final uid = user!.uid;
     final storage = FirebaseStorage.instance;
-    final downloadURL =
-        await storage.ref("articles_pdfs/pdf-$uid.pdf").getDownloadURL();
+    final downloadURL = await storage
+        .ref("articles_pdfs/pdf-${widget.article.id}-$uid.pdf")
+        .getDownloadURL();
     return downloadURL;
   }
 
   Future<File> createFileOfPdfUrl(String url) async {
+    // NomeModelo do pdf no firebase
+    //pdf-(idArtigo)-(uid).pdf
     final request = await HttpClient().getUrl(Uri.parse(url));
     final response = await request.close();
     final bytes = await consolidateHttpClientResponseBytes(response);
@@ -116,10 +119,12 @@ class _ArticlePageState extends State<ArticlePage> {
                       TitleWidget(
                         title: widget.article.title,
                       ),
+                      const Divider(),
                       Text(
                         widget.article.abstract,
                         style: AppTextStyles.trailingRegular,
                       ),
+                      const Divider(),
                       Padding(
                         padding: EdgeInsets.only(
                           top: AppSize.defaultPadding / 3,
@@ -134,9 +139,9 @@ class _ArticlePageState extends State<ArticlePage> {
                                 if (user == null) {
                                   if (!mounted) return;
                                   customSnackBar(
-                                      context: context,
-                                      text:
-                                          "Para ler necessita fazer login antes.");
+                                    context: context,
+                                    text: "Cadastre-se para ler.",
+                                  );
                                 } else {
                                   if (file.path == '') {
                                     debugPrint("Path do pdf: ${file.path}");
@@ -144,9 +149,8 @@ class _ArticlePageState extends State<ArticlePage> {
                                     customSnackBar(
                                         context: context,
                                         text:
-                                            "Não foi possível fazer o donwload e abrir. Tente novamente!");
+                                            "Não foi possível baixar e abrir. Tente novamente.");
                                   } else {
-                                    debugPrint("Path do pdf: ${file.path}");
                                     final pdfController = PdfController(
                                       document: PdfDocument.openFile(file.path),
                                     );
@@ -185,12 +189,13 @@ class _ArticlePageState extends State<ArticlePage> {
                               icon: Icons.share_outlined,
                               text: "COMPARTILHAR",
                               function: () async {
-                                if (file.path == '' && !mounted) {
+                                if (file.path == '') {
+                                  if (!mounted) return;
                                   debugPrint("Path do pdf: ${file.path}");
                                   customSnackBar(
                                       context: context,
                                       text:
-                                          "Não foi possível fazer o compartilhar. Tente novamente!");
+                                          "Não foi possível compartilhar. Tente novamente.");
                                 } else {
                                   debugPrint("Path do pdf: ${file.path}");
                                   await _onShare();

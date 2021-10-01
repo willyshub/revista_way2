@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:native_pdf_view/native_pdf_view.dart';
 import 'package:revista_way2/model/doc_model.dart';
 import 'package:revista_way2/theme/theme_export.dart';
 
@@ -27,30 +26,7 @@ class DocWidgetModel extends StatelessWidget {
           // pdf view
           Expanded(
             child: GestureDetector(
-              onTap: () {
-               /*  if (doc.typeFile == "doc" || doc.typeFile == "docx") {
-                  final pdfController = PdfController(
-                    document: PdfDocument.openFile(doc.path!),
-                  );
-
-                  Widget pdfView() => PdfView(
-                        controller: pdfController,
-                        documentLoader: const Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                        pageLoader: const Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      );
-
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => pdfView(),
-                    ),
-                  );
-                } */
-              },
+              onTap: () {},
               child: Container(
                 margin: EdgeInsets.all(AppSize.defaultPadding),
                 child: Row(

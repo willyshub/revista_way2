@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:revista_way2/theme/app_colors.dart';
 import 'package:revista_way2/theme/app_size.dart';
 import 'package:revista_way2/theme/app_text_styles.dart';
-import 'package:revista_way2/view-model/auth/auth_firebase.dart';
 import 'package:revista_way2/view-model/home_vm.dart';
 import 'package:revista_way2/view/pages/article/article_page.dart';
 import 'package:revista_way2/view/widgets/custom_drawer_widget.dart';
@@ -42,8 +41,7 @@ class _HomePageState extends State<HomePage> {
                     style: AppTextStyles.titleRegular,
                     children: [
                       TextSpan(
-                        text:
-                            "WAY",
+                        text: "WAY",
                         style: AppTextStyles.titleLight,
                       )
                     ],
@@ -56,7 +54,7 @@ class _HomePageState extends State<HomePage> {
                       Navigator.pushNamed(context, "/login");
                     },
                     icon: Visibility(
-                      replacement: Icon(Icons.person),
+                      replacement: const Icon(Icons.person),
                       visible: false,
                       child: ClipOval(
                         child: Material(
@@ -89,7 +87,7 @@ class _HomePageState extends State<HomePage> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
-            final FirebaseApp firebaseApp = await Firebase.initializeApp();
+            await Firebase.initializeApp();
             final User? user = FirebaseAuth.instance.currentUser;
 
             if (user != null) {
@@ -147,7 +145,8 @@ class ListArticles extends StatelessWidget {
             );
           }
 
-          if (futureSnapshot.connectionState == ConnectionState.done) {
+          if (futureSnapshot.connectionState == ConnectionState.done &&
+              provider.allArticles.isNotEmpty) {
             return ListView.separated(
               separatorBuilder: (_, index) {
                 return SizedBox(
@@ -216,9 +215,14 @@ class ListArticles extends StatelessWidget {
             );
           }
           return Center(
-            child: Text(
-              "Não foi possível carregar os artigos. Entre em contato com os administradores",
-              style: AppTextStyles.titleListTile,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+            
+              child: Text(
+                "Não foi possível carregar os artigos. Entre em contato com os administradores",
+                textAlign: TextAlign.center,
+                style: AppTextStyles.titleListTile,
+              ),
             ),
           );
         });

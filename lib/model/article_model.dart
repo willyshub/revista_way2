@@ -1,13 +1,12 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 
 class Article {
   Article({
     this.id,
     required this.userUid,
     required this.title,
-    required this.isApproved,
+    this.isApproved = false,
     required this.authors,
     required this.abstract,
 
@@ -46,13 +45,12 @@ class Article {
       title: document['title'] as String,
       authors: List<String>.from(document['authors'] as List<dynamic>),
       abstract: document['abstract'] as String,
-      //doc: DocModel.fromMap(document['doc'] as Map<String, dynamic>),
     );
   }
 
   String? id;
   String title;
-  String? userUid;
+  String userUid;
   bool isApproved;
   List<String> authors;
   String abstract;
@@ -81,10 +79,10 @@ class Article {
   Map<String, dynamic> toMap() {
     return {
       'title': title,
+      "isApproved": isApproved,
       'userUid': userUid,
       'authors': authors,
       'abstract': abstract,
-      //'doc': doc.toMap(),
     };
   }
 

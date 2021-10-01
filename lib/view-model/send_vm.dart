@@ -33,10 +33,10 @@ class SendVM extends ChangeNotifier {
   }) async {
     final file = File(docmodel.path!);
     final User? user = FirebaseAuth.instance.currentUser;
-    final providerUser = Provider.of<AuthFirebase>(context, listen: false);
+    Provider.of<AuthFirebase>(context, listen: false);
     try {
       final ref =
-          'articles_docs//doc-$nameArticle-${user!.uid}.${docmodel.typeFile}';
+          'articles_docs/doc-$nameArticle-${user!.uid}.${docmodel.typeFile}';
       _storage.ref(ref).putFile(file);
     } on FirebaseException catch (e) {
       throw Exception("Error no upload: ${e.code}");
@@ -98,12 +98,16 @@ class SendVM extends ChangeNotifier {
     final length = listSimpleTextField.length;
     if (length < 5) {
       listSimpleTextField.add(value);
-      debugPrint("length: $length");
       notifyListeners();
     }
   }
 
-  void deleteSimpleTextField(SimpleTextField value) {
+  void rebootListFild() {
+    listSimpleTextField = [];
+    notifyListeners();
+  }
+
+  void deleteSimpleTextField() {
     listSimpleTextField.remove(listSimpleTextField.last);
     notifyListeners();
   }

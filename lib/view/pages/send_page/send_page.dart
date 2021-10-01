@@ -35,11 +35,9 @@ class _SendPageState extends State<SendPage> {
   //
   var abstractController = TextEditingController();
   //
-  var ref1Controller = TextEditingController();
-  var ref2Controller = TextEditingController();
-  var ref3Controller = TextEditingController();
-  var ref4Controller = TextEditingController();
+
   var ref5Controller = TextEditingController();
+//
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -47,14 +45,26 @@ class _SendPageState extends State<SendPage> {
     super.initState();
     final providerRead = context.read<SendVM>();
     if (providerRead.listSimpleTextField.isEmpty) {
-      providerRead.addSimpleTextField(
-        SimpleTextField(
-          index: 2,
-          hintText: "Ex. Fulano de Tal da Silva Souza",
-          textEditingController: author1Controller,
-        ),
-      );
+      // TODO: analisar e tentar melhorar isso
+      // inicializa a lista de autores - objetivo: apenas visual.
+      initializeListFiled(providerRead);
+    } else {
+      providerRead.rebootListFild(); //
+      initializeListFiled(providerRead);
+      providerRead.deleteDoc();
     }
+  }
+
+  void initializeListFiled(
+    SendVM providerReadInternal,
+  ) {
+    providerReadInternal.addSimpleTextField(
+      SimpleTextField(
+        index: 2,
+        hintText: "Ex. Fulano de Tal da Silva Souza",
+        textEditingController: author1Controller,
+      ),
+    );
   }
 
   @override
@@ -69,14 +79,6 @@ class _SendPageState extends State<SendPage> {
       author3Controller,
       author4Controller,
       author5Controller,
-    ];
-
-    final List<TextEditingController> listRefController = [
-      ref1Controller,
-      ref2Controller,
-      ref3Controller,
-      ref4Controller,
-      ref5Controller,
     ];
 
     return Scaffold(
@@ -151,20 +153,54 @@ class _SendPageState extends State<SendPage> {
                               ))
                           .toList(),
                     ),
-                    ButtonAddAuthorWidget(
-                      fun: () {
-                        final textController = listAuthorController[providerRead
-                            .listSimpleTextField.length]; // get the first
+                    Visibility(
+                      visible: providerRead.listSimpleTextField.length == 1,
+                      replacement: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: ButtonAddAuthorWidget(
+                              fun: () {
+                                final textController = listAuthorController[
+                                    providerRead.listSimpleTextField
+                                        .length]; // get the first
 
-                        providerRead.addSimpleTextField(
-                          SimpleTextField(
-                            index: 2,
-                            hintText:
-                                "Ex. Fulano de Tal da Silva Souza ${counterAuthor + 1}",
-                            textEditingController: textController,
+                                providerRead.addSimpleTextField(
+                                  SimpleTextField(
+                                    index: 2,
+                                    hintText:
+                                        "Ex. Fulano de Tal da Silva Souza ${counterAuthor + 1}",
+                                    textEditingController: textController,
+                                  ),
+                                );
+                              },
+                            ),
                           ),
-                        );
-                      },
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: ButtonAddAuthorWidget(
+                              twoButton: true,
+                              fun: providerRead.deleteSimpleTextField,
+                            ),
+                          ),
+                        ],
+                      ),
+                      child: ButtonAddAuthorWidget(
+                        fun: () {
+                          final textController = listAuthorController[
+                              providerRead
+                                  .listSimpleTextField.length]; // get the first
+
+                          providerRead.addSimpleTextField(
+                            SimpleTextField(
+                              index: 2,
+                              hintText:
+                                  "Ex. Fulano de Tal da Silva Souza ${counterAuthor + 1}",
+                              textEditingController: textController,
+                            ),
+                          );
+                        },
+                      ),
                     ),
                     customSizedBox(),
                     const TitleWidget(
@@ -199,10 +235,24 @@ class _SendPageState extends State<SendPage> {
                       },
                     ),
                     ButtonSubmitArticleWidget(
+                      
                       function: () async {
                         if (_formKey.currentState!.validate()) {
                           final User? user = FirebaseAuth.instance.currentUser;
 
+                          final providerRead = context.read<SendVM>();
+                          if (providerRead.listSimpleTextField.isEmpty) {
+                            // atribui a ultima modificação do author1Controller a lista Controllers
+                            providerRead.addSimpleTextField(
+                              SimpleTextField(
+                                index: 2,
+                                hintText: "Ex. Fulano de Tal da Silva Souza",
+                                textEditingController: author1Controller,
+                              ),
+                            );
+                          }
+
+                          //step 1 => transform input in model
                           final articleInstance = Article.fromMap({
                             "title": titleController.text,
                             "userUid": user!.uid,
@@ -216,13 +266,23 @@ class _SendPageState extends State<SendPage> {
                             ],
                             "abstract": abstractController.text,
                           });
+
+                          //step 2 => send file with name of document
+
                           await providerRead.uploadDoc(
                             docmodel: providerRead.doc!,
                             context: context,
                             nameArticle: titleController.text,
                           );
+                          await Future.delayed(
+                              const Duration(milliseconds: 500));
                           await providerRead
                               .sendArticle(articleInstance); // enviando arquivo
+                          if (!mounted) return;
+                          customSnackBar(
+                              text:
+                                  "Artigo enviado com sucesso! Aguarde a aprovação.",
+                              context: context);
                           Navigator.pop(context);
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -244,6 +304,19 @@ class _SendPageState extends State<SendPage> {
         ],
       ),
     );
+  }
+
+  void customSnackBar({
+    required String text,
+    required BuildContext context,
+  }) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      backgroundColor: Colors.green[400],
+      content: Text(
+        text,
+        style: AppTextStyles.buttonBoldHeading,
+      ),
+    ));
   }
 }
 
