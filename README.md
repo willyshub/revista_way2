@@ -56,4 +56,5 @@ em formato PDF do artigo selecionado.
 # Considerações Finais
 ---
 Após a submissão do artigo, o editor analisará se todos os critérios atendem
-às recomendações. Se sim, será colocado na identidade visu
+às recomendações. Se sim, será colocado na identidade visual da revista,
+convertido para PDF e será disponibilizado para a plataforma.
