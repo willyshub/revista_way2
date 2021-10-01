@@ -17,7 +17,7 @@ científica.
 ## 1. Cadastro
 
 Para o usuário submeter um novo artigo, será necessário realizar um
-cadastro, caso não tenha uma conta já registrada na revista.ou login
+cadastro, caso não tenha uma conta já registrada na revista. Ou login
 utilizando uma conta Google já registrada anteriormente.
 
 ## 2. Submissão
@@ -26,13 +26,12 @@ Para realizar a submissão, o usuário precisará preencher os campos:
 - Título do artigo;
 - Nome do(s) autor(es) – Máximo (5);
 - Resumo do artigo;
-- Biografia do(s) autor(es).
 - Arquivo docx.
 
 ## 3. Leitura
 
 Após a aprovação do administrador do aplicativo será disponibilizada uma
-visão geral dos artigos, contendo: título, resumo e biografia do(s) autor (es),
+visão geral dos artigos, contendo: título, resumo e nome(s) do(s) autor(es),
 para que se o leitor se interesse, faça a leitura completa e o arquivo em
 formato pdf, com a identidade visual da revista.
 Além disso, a leitura de um determinado artigo não requer a realização do
