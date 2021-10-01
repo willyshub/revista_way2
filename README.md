@@ -2,7 +2,7 @@
 
 ![](https://github.com/wylysdev/revista_way2/blob/main/images/capa_revistaway.png) 
 
-# O que é?
+# O aplicativo
 ---
 A revista digital W.A.Y é um veículo digital para submissão e leitura de
 artigos, resumos, resenhas, entre outros. Idealizada por discentes do curso
@@ -12,7 +12,7 @@ Uma revista digital embutida em uma aplicação móvel com o intuito de
 democratizar a aquisição de conhecimento e revolucionar a comunidade
 científica.
 
-# O aplicativo e suas funções (Primeira versão)
+# Suas funções
 ---
 ## 1. Cadastro
 
@@ -45,7 +45,7 @@ redes sociais, como: whatsapp, facebook, instagram, twitter, etc.
 
 > Obs: Ainda não está em vigor nessa versão.
 
-## 5.Download
+## 5. Download
 
 Ao entrar para ler mais detalhes dos artigos, será disponibilizada para o
 usuário uma opção de download. O mesmo poderá ter acesso a um arquivo
