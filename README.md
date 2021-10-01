@@ -38,4 +38,22 @@ Além disso, a leitura de um determinado artigo não requer a realização do
 download, o leitor será redirecionado a uma nova tela, onde o artigo poderá
 ser lido, diretamente do aplicativo.
 
-Obs: Compartilhamentos e downloads ainda não estão disponíveis nessa versão.
+## 4. Compartilhamento
+
+Serão disponibilizados para compartilhamento em outras plataformas ou
+redes sociais, como: whatsapp, facebook, instagram, twitter, etc.
+
+> Obs: Ainda não está em vigor nessa versão.
+
+## 5.Download
+
+Ao entrar para ler mais detalhes dos artigos, será disponibilizada para o
+usuário uma opção de download. O mesmo poderá ter acesso a um arquivo
+em formato PDF do artigo selecionado.
+
+> Obs: Ainda não está em vigor nessa versão.
+
+# Considerações Finais
+---
+Após a submissão do artigo, o editor analisará se todos os critérios atendem
+às recomendações. Se sim, será colocado na identidade visu
