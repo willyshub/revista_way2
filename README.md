@@ -5,10 +5,7 @@
 # O aplicativo
 ---
 A revista digital W.A.Y é um veículo digital para submissão e leitura de
-artigos, resumos, resenhas, entre outros. Idealizada por discentes do curso
-de Bacharelado em Ciência da Computação da Universidade Federal do Vale
-do São Francisco, situado no Campus Salgueiro-PE.
-Uma revista digital embutida em uma aplicação móvel com o intuito de
+artigos, resumos, resenhas, entre outros. Uma revista digital embutida em uma aplicação móvel com o intuito de
 democratizar a aquisição de conhecimento e revolucionar a comunidade
 científica.
 
