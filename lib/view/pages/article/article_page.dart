@@ -17,7 +17,7 @@ class ArticlePage extends StatefulWidget {
 }
 
 class _ArticlePageState extends State<ArticlePage> {
-  Future<void> downloadPdfURL() async {
+  /* Future<void> downloadPdfURL() async {
     final storage = FirebaseStorage.instance;
 
     //final nameFile = 'articles_pdfs/pdf-${article.userUid}.pdf';
@@ -26,14 +26,13 @@ class _ArticlePageState extends State<ArticlePage> {
         .getDownloadURL();
     final uri = Uri.parse(downloadURL);
     // Dio dio = dio.downloadUri(uri, savePath);
-  }
+  } */
 
   Future<String> getUrlDonwload() async {
-    final user = await AuthFirebase.currentUser();
-    final uid = user!.uid;
     final storage = FirebaseStorage.instance;
     final downloadURL = await storage
-        .ref("articles_pdfs/pdf-${widget.article.id}-$uid.pdf")
+        .ref(
+            "articles_pdfs/pdf-${widget.article.id}-${widget.article.userUid}.pdf")
         .getDownloadURL();
     return downloadURL;
   }

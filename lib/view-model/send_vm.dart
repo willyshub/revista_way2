@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -64,13 +63,15 @@ class SendVM extends ChangeNotifier {
     if (result != null) {
       final PlatformFile file = result.files.first;
 
-      final DocModel doc = DocModel.fromMap({
-        "size": file.size,
-        "name": file.name,
-        "typeFile": file.extension,
-        "path": file.path,
-        "file": File(file.path!)
-      });
+      final DocModel doc = DocModel.fromMap(
+        {
+          "size": file.size,
+          "name": file.name,
+          "typeFile": file.extension,
+          "path": file.path,
+          "file": File(file.path!)
+        },
+      );
 
       setDoc(doc);
 

@@ -29,20 +29,22 @@ class _HomePageState extends State<HomePage> {
         key: scaffoldKey,
         drawer: const CustomDrawerWidget(),
         body: NestedScrollView(
+          physics: const NeverScrollableScrollPhysics(),
           headerSliverBuilder: (context, bool a) {
             return [
               SliverAppBar(
+                backgroundColor: AppColors.primary,
                 centerTitle: true,
                 floating: true,
                 elevation: AppSize.defaultElevation,
                 title: RichText(
                   text: TextSpan(
                     text: "Revista",
-                    style: AppTextStyles.titleRegular,
+                    style: AppTextStyles.titleLight,
                     children: [
                       TextSpan(
                         text: "WAY",
-                        style: AppTextStyles.titleLight,
+                        style: AppTextStyles.titleRegular,
                       )
                     ],
                   ),
@@ -66,17 +68,6 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                     ),
-                  ),
-                  IconButton(
-                    tooltip: "Atualizar",
-                    onPressed: () async {
-                      final provider =
-                          Provider.of<HomeVM>(context, listen: false);
-                      await provider.loadAllArticles();
-                      if (!mounted) return;
-                      Navigator.pushReplacementNamed(context, "/home");
-                    },
-                    icon: const Icon(Icons.refresh_rounded),
                   ),
                   SizedBox(width: AppSize.defaultPadding / 3),
                 ],
@@ -116,10 +107,10 @@ class ListArticles extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<HomeVM>(context, listen: false);
+    final providerNotListen = Provider.of<HomeVM>(context, listen: false);
 
     return FutureBuilder<QuerySnapshot>(
-        future: provider.loadAllArticles(),
+        future: providerNotListen.loadAllArticles(),
         builder: (context, futureSnapshot) {
           if (futureSnapshot.connectionState == ConnectionState.waiting) {
             return Column(
@@ -146,78 +137,89 @@ class ListArticles extends StatelessWidget {
           }
 
           if (futureSnapshot.connectionState == ConnectionState.done &&
-              provider.allArticles.isNotEmpty) {
-            return ListView.separated(
-              separatorBuilder: (_, index) {
-                return SizedBox(
-                  height: AppSize.defaultPadding * 0.8,
-                );
+              providerNotListen.allArticles.isNotEmpty) {
+            return RefreshIndicator(
+              edgeOffset: 10.0,
+              displacement: 20.0,
+              triggerMode: RefreshIndicatorTriggerMode.anywhere,
+              onRefresh: () async {
+                final provider = Provider.of<HomeVM>(context, listen: false);
+                await provider.loadAllArticles();
               },
-              physics: const NeverScrollableScrollPhysics(),
-              padding: EdgeInsets.only(top: AppSize.defaultPadding * 0.8),
-              itemCount: provider.allArticles.length,
-              shrinkWrap: true,
-              itemBuilder: (_, index) {
-                return Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: AppSize.defaultPadding),
-                  child: Card(
-                    elevation: 2,
-                    child: ListTile(
-                      contentPadding: EdgeInsets.all(AppSize.defaultPadding),
-                      selectedTileColor: AppColors.primary.withOpacity(0.1),
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ArticlePage(
-                                    article: provider.allArticles[index])));
-                      },
-                      title: Text(
-                        provider.allArticles[index].title,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppTextStyles.titleListTile,
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
+              child: ListView.separated(
+                separatorBuilder: (_, index) {
+                  return SizedBox(
+                    height: AppSize.defaultPadding * 0.8,
+                  );
+                },
+                physics: const BouncingScrollPhysics(),
+                padding: EdgeInsets.only(top: AppSize.defaultPadding * 0.8),
+                itemCount: Provider.of<HomeVM>(context, listen: true)
+                    .allArticles
+                    .length,
+                shrinkWrap: true,
+                itemBuilder: (_, index) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: AppSize.defaultPadding),
+                    child: Card(
+                      elevation: 2,
+                      child: ListTile(
+                        contentPadding: EdgeInsets.all(AppSize.defaultPadding),
+                        selectedTileColor: AppColors.primary.withOpacity(0.1),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ArticlePage(
+                                      article: providerNotListen
+                                          .allArticles[index])));
+                        },
+                        title: Text(
+                          providerNotListen.allArticles[index].title,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTextStyles.titleListTile,
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                                padding: EdgeInsets.only(
+                                    top: AppSize.defaultPadding * 0.3),
+                                child: Text(
+                                  providerNotListen.allArticles[index].abstract,
+                                  maxLines: 5,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppTextStyles.trailingRegular,
+                                )),
+                            Padding(
                               padding: EdgeInsets.only(
                                   top: AppSize.defaultPadding * 0.3),
-                              child: Text(
-                                provider.allArticles[index].abstract,
-                                maxLines: 5,
-                                overflow: TextOverflow.ellipsis,
-                                style: AppTextStyles.trailingRegular,
-                              )),
-                          Padding(
-                            padding: EdgeInsets.only(
-                                top: AppSize.defaultPadding * 0.3),
-                            child: RichText(
-                                text: TextSpan(
-                                    text: "Autor: ",
-                                    style: AppTextStyles.buttonBoldHeading,
-                                    children: [
-                                  TextSpan(
-                                    text:
-                                        provider.allArticles[index].authors[0],
-                                    style: AppTextStyles.buttonHeading,
-                                  ),
-                                ])),
-                          ),
-                        ],
+                              child: RichText(
+                                  text: TextSpan(
+                                      text: "Autor: ",
+                                      style: AppTextStyles.buttonBoldHeading,
+                                      children: [
+                                    TextSpan(
+                                      text: providerNotListen
+                                          .allArticles[index].authors[0],
+                                      style: AppTextStyles.buttonHeading,
+                                    ),
+                                  ])),
+                            ),
+                          ],
+                        ),
+                        isThreeLine: true,
                       ),
-                      isThreeLine: true,
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             );
           }
           return Center(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-            
               child: Text(
                 "Não foi possível carregar os artigos. Entre em contato com os administradores",
                 textAlign: TextAlign.center,
