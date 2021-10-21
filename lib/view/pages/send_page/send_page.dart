@@ -11,8 +11,6 @@ import 'componentes/button_attach_doc_widget.dart';
 import 'componentes/button_submit_article_widget.dart';
 import 'componentes/doc_model_widget.dart';
 import 'componentes/simple_text_field.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:revista_way2/view-model/auth/auth_firebase.dart';
 
 Widget customSizedBox() => SizedBox(height: AppSize.defaultPadding);
 
@@ -34,36 +32,43 @@ class _SendPageState extends State<SendPage> {
   var author5Controller = TextEditingController();
   //
   var abstractController = TextEditingController();
-  //
 
-  var ref5Controller = TextEditingController();
-//
   final _formKey = GlobalKey<FormState>();
+  late SendVM _sendVMProvider;
 
   @override
   void initState() {
     super.initState();
-    final providerRead = context.read<SendVM>();
-    if (providerRead.listSimpleTextField.isEmpty) {
+    _sendVMProvider = context.read<SendVM>();
+    if (_sendVMProvider.listSimpleTextField.isEmpty) {
       // TODO: analisar e tentar melhorar isso
       // inicializa a lista de autores - objetivo: apenas visual.
-      initializeListFiled(providerRead);
-    } else {
-      providerRead.rebootListFild(); //
-      initializeListFiled(providerRead);
-      providerRead.deleteDoc();
+      initializeListFiled(_sendVMProvider, isInit: true);
     }
   }
 
-  void initializeListFiled(
-    SendVM providerReadInternal,
-  ) {
+  @override
+  void didChangeDependencies() {
+    _sendVMProvider = context.read<SendVM>();
+    super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    _sendVMProvider.rebootListFild(isInit: true); //
+    initializeListFiled(_sendVMProvider, isInit: true);
+    _sendVMProvider.deleteDoc(isInit: true);
+    super.dispose();
+  }
+
+  void initializeListFiled(SendVM providerReadInternal, {bool isInit = false}) {
     providerReadInternal.addSimpleTextField(
       SimpleTextField(
         index: 2,
         hintText: "Ex. Fulano de Tal da Silva Souza",
         textEditingController: author1Controller,
       ),
+      isInit: isInit,
     );
   }
 
@@ -98,7 +103,7 @@ class _SendPageState extends State<SendPage> {
               ),
             ),
             flexibleSpace: FlexibleSpaceBar(
-              centerTitle: true,
+              //centerTitle: true,
               title: Text(
                 "Enviar arquivo",
                 overflow: TextOverflow.ellipsis,
@@ -235,7 +240,6 @@ class _SendPageState extends State<SendPage> {
                       },
                     ),
                     ButtonSubmitArticleWidget(
-                      
                       function: () async {
                         if (_formKey.currentState!.validate()) {
                           final User? user = FirebaseAuth.instance.currentUser;
@@ -319,96 +323,3 @@ class _SendPageState extends State<SendPage> {
     ));
   }
 }
-
-
-
-
-/*
-    return SafeArea(
-      child: Scaffold(
-        body: NestedScrollView(
-          headerSliverBuilder: (context, bool a) {
-            return [
-              SliverAppBar(
-                centerTitle: true,
-                brightness: Brightness.dark,
-                backgroundColor: AppColors.primary,
-                title: RichText(
-                  text: TextSpan(
-                    text: "Enviar",
-                    style: AppTextStyles.titleRegular,
-                    children: const [
-                      TextSpan(
-                        text: " arquivo",
-                      )
-                    ],
-                  ),
-                ),
-              )
-            ];
-          },
-          body: ListView(
-            padding: EdgeInsets.symmetric(
-              horizontal: AppSize.defaultPadding,
-              vertical: AppSize.defaultPadding,
-            ),
-            shrinkWrap: true,
-            children: [
-              customSizedBox(),
-              const TitleWidget(
-                title: "Título",
-              ),
-              SimpleTextField(
-                hintText: "Escreva o título do seu artigo",
-                textEditingController: titleController,
-              ),
-              customSizedBox(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const TitleWidget(
-                    title: "Autores",
-                  ),
-                  Padding(
-                    padding:
-                        EdgeInsets.only(bottom: AppSize.defaultPadding / 2),
-                    child: Text(
-                      "Add new",
-                      style: AppTextStyles.trailingRegular,
-                    ),
-                  ),
-                ],
-              ),
-              SimpleTextField(
-                hintText: "Escreva o nome do autor",
-                textEditingController: titleController,
-              ),
-              const ButtonAddAuthor(),
-              customSizedBox(),
-              const TitleWidget(
-                title: "Resumo",
-              ),
-              SimpleTextField(
-                hintText: "Escreva seu resumo",
-                textEditingController: authorController,
-                isExpand: true,
-              ),
-              StreamBuilder<List<DocModel>>(
-                stream: bloc.myStream,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return DocWidgetModel(doc: bloc.docList.first);
-                  } else {
-                    return Padding(
-                      padding: EdgeInsets.only(top: AppSize.defaultPadding / 2),
-                      child: ButtonAttachDoc(bloc: bloc),
-                    );
-                  }
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-    */

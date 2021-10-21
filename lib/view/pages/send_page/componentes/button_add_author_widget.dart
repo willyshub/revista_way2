@@ -57,7 +57,7 @@ class ButtonAddAuthorWidget extends StatelessWidget {
                 ),
               ),
               Text(
-                twoButton ? " -1 autor " : " +1 autor",
+                "autor",
                 overflow: TextOverflow.ellipsis,
                 style: twoButton
                     ? AppTextStyles.buttonBoldGray

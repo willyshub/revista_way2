@@ -20,9 +20,9 @@ class SendVM extends ChangeNotifier {
     notifyListeners();
   }
 
-  void deleteDoc() {
+  void deleteDoc({bool isInit = false}) {
     doc = null;
-    notifyListeners();
+    if(!isInit) notifyListeners();
   }
 
   Future<void> uploadDoc({
@@ -95,21 +95,22 @@ class SendVM extends ChangeNotifier {
 
   List<SimpleTextField> listSimpleTextField = [];
 
-  void addSimpleTextField(SimpleTextField value) {
+  void addSimpleTextField(SimpleTextField value, {bool isInit = false}) {
     final length = listSimpleTextField.length;
     if (length < 5) {
       listSimpleTextField.add(value);
-      notifyListeners();
+      if(!isInit) notifyListeners();
     }
   }
+  
 
-  void rebootListFild() {
+  void rebootListFild({bool isInit = false}) {
     listSimpleTextField = [];
-    notifyListeners();
+    if(!isInit) notifyListeners();
   }
 
-  void deleteSimpleTextField() {
+  void deleteSimpleTextField({bool isInit = false}) {
     listSimpleTextField.remove(listSimpleTextField.last);
-    notifyListeners();
+    if(!isInit) notifyListeners();
   }
 }

@@ -17,16 +17,8 @@ class ArticlePage extends StatefulWidget {
 }
 
 class _ArticlePageState extends State<ArticlePage> {
-  /* Future<void> downloadPdfURL() async {
-    final storage = FirebaseStorage.instance;
-
-    //final nameFile = 'articles_pdfs/pdf-${article.userUid}.pdf';
-    final downloadURL = await storage
-        .ref("articles_pdfs/pdf-taEgxI6UaNgR4Z1LUgTnWsfv9wz2.pdf")
-        .getDownloadURL();
-    final uri = Uri.parse(downloadURL);
-    // Dio dio = dio.downloadUri(uri, savePath);
-  } */
+  String? _urlDonwload;
+  File? _pdfArticle;
 
   Future<String> getUrlDonwload() async {
     final storage = FirebaseStorage.instance;
@@ -52,10 +44,10 @@ class _ArticlePageState extends State<ArticlePage> {
 
   Future<void> _onShare() async {
     final box = context.findRenderObject() as RenderBox?;
-
-    await Share.share(
-      file.path,
-      subject: file.path,
+    final fileInternal = _pdfArticle!;
+    await Share.shareFiles(
+      [fileInternal.path],
+      subject: "by RevistaWay: ${widget.article.title}",
       sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
     );
   }
@@ -64,8 +56,21 @@ class _ArticlePageState extends State<ArticlePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    if (!mounted) return;
+    getUrlDonwload().then((url) {
+      _urlDonwload = url;
+      createFileOfPdfUrl(url).then((pdf) {
+        _pdfArticle = pdf;
+        setState(() {
+          file = pdf;
+        });
+      });
+    });
+  }
+
+  @override
+  void didUpdateWidget(covariant ArticlePage oldWidget) {
     getUrlDonwload().then((url) {
       createFileOfPdfUrl(url).then((f) {
         setState(() {
@@ -73,6 +78,7 @@ class _ArticlePageState extends State<ArticlePage> {
         });
       });
     });
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
@@ -97,7 +103,7 @@ class _ArticlePageState extends State<ArticlePage> {
               ),
             ),
             flexibleSpace: FlexibleSpaceBar(
-              centerTitle: true,
+              //centerTitle: true,
               title: Text(
                 "Artigo",
                 style: AppTextStyles.titleRegular,
@@ -139,7 +145,7 @@ class _ArticlePageState extends State<ArticlePage> {
                                   if (!mounted) return;
                                   customSnackBar(
                                     context: context,
-                                    text: "Cadastre-se para ler.",
+                                    text: "Cadastre-se para LER! É rápido.",
                                   );
                                 } else {
                                   if (file.path == '') {
@@ -188,16 +194,25 @@ class _ArticlePageState extends State<ArticlePage> {
                               icon: Icons.share_outlined,
                               text: "COMPARTILHAR",
                               function: () async {
-                                if (file.path == '') {
-                                  if (!mounted) return;
-                                  debugPrint("Path do pdf: ${file.path}");
+                                final user = await AuthFirebase.currentUser();
+                                if (user == null) {
                                   customSnackBar(
-                                      context: context,
-                                      text:
-                                          "Não foi possível compartilhar. Tente novamente.");
+                                    context: context,
+                                    text:
+                                        "Cadastre-se para COMPARTILHAR! É rápido.",
+                                  );
                                 } else {
-                                  debugPrint("Path do pdf: ${file.path}");
-                                  await _onShare();
+                                  if (!mounted) return;
+                                  if (file.path == '') {
+                                    debugPrint("Path do pdf: ${file.path}");
+                                    customSnackBar(
+                                        context: context,
+                                        text:
+                                            "Não foi possível compartilhar. Tente novamente.");
+                                  } else {
+                                    debugPrint("Path do pdf: ${file.path}");
+                                    await _onShare();
+                                  }
                                 }
                               },
                             ),
@@ -246,71 +261,3 @@ class _ArticlePageState extends State<ArticlePage> {
     ));
   }
 }
-
-/* 
-  ------------------------------------------------------
-
-                        DEAD CODES 
-
-  ------------------------------------------------------
-
- */
-
-/* class PDFScreen extends StatelessWidget {
-  String pathPDF = "";
-  PDFScreen(this.pathPDF);
-
-  @override
-  Widget build(BuildContext context) {
-    return PDFViewerScaffold(
-        appBar: AppBar(
-          title: Text("Document"),
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.share),
-              onPressed: () {},
-            ),
-          ],
-        ),
-        path: pathPDF);
-  }
-} */
-
-/*  SizedBox(
-                        height: AppSize.defaultPadding,
-                      ),
-                      Text(
-                        "Referências: ",
-                        style: AppTextStyles.buttonBoldHeading,
-                      ),
-                      Column(
-                        children: article.ref
-                            .map(
-                              (name) => Text(
-                                name,
-                                style: AppTextStyles.buttonGray,
-                              ),
-                            )
-                            .toList(),
-                      ), */
-
-// floatingActionButton: FloatingActionButton(
-//   onPressed: () {},
-//   backgroundColor: AppColors.primary,
-//   child: IconButton(
-//     onPressed: () {},
-//     icon: const Icon(Icons.download_rounded),
-//   ),
-// ),
-
-
-/* final Directory systemTempDir = Directory.systemTemp;
-    final File tempFile = File('${systemTempDir.path}/tmp.jpg');
-    if (tempFile.existsSync()) {
-      await tempFile.delete();
-    }
-    final StorageFileDownloadTask task = ref.writeToFile(tempFile);
-    final int byteCount = (await task.future).totalByteCount;
-    var bodyBytes = downloadData.bodyBytes;
-    final String name = await ref.getName();
-    final String path = await ref.getPath();  */

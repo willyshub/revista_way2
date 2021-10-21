@@ -20,7 +20,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      _refreshIndicatorKey.currentState;
+    });
+    super.initState();
+  }
+
   var scaffoldKey = GlobalKey<ScaffoldState>();
+  var _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +83,7 @@ class _HomePageState extends State<HomePage> {
               )
             ];
           },
-          body: const ListArticles(),
+          body: ListArticles(refreshIndicatorKey: _refreshIndicatorKey),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
@@ -103,7 +112,10 @@ class _HomePageState extends State<HomePage> {
 class ListArticles extends StatelessWidget {
   const ListArticles({
     Key? key,
+    required this.refreshIndicatorKey,
   }) : super(key: key);
+
+  final GlobalKey<RefreshIndicatorState> refreshIndicatorKey;
 
   @override
   Widget build(BuildContext context) {
@@ -139,6 +151,7 @@ class ListArticles extends StatelessWidget {
           if (futureSnapshot.connectionState == ConnectionState.done &&
               providerNotListen.allArticles.isNotEmpty) {
             return RefreshIndicator(
+              key: refreshIndicatorKey,
               edgeOffset: 10.0,
               displacement: 20.0,
               triggerMode: RefreshIndicatorTriggerMode.anywhere,
