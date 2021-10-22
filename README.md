@@ -1,6 +1,7 @@
 # Revista WAY
 
-![](https://github.com/wylysdev/revista_way2/blob/main/images/capa_revistaway.png) 
+![CAPA](https://github.com/wylysdev/revista_way2/blob/main/images/capa_revistaway.png) 
+![GIF](https://github.com/wylysdev/revista_way2/blob/main/images/revistawaygif.gif)
 
 # O aplicativo
 ---
@@ -39,8 +40,6 @@ ser lido, diretamente do aplicativo.
 
 Serão disponibilizados para compartilhamento em outras plataformas ou
 redes sociais, como: whatsapp, facebook, instagram, twitter, etc.
-
-> Obs: Ainda não está em vigor nessa versão.
 
 ## 5. Download
 
