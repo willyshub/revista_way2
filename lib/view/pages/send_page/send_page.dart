@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:revista_way2/exports/my_classes.dart';
 import 'package:revista_way2/model/article_model.dart';
 import 'package:revista_way2/theme/app_size.dart';
 import 'package:revista_way2/theme/app_text_styles.dart';
@@ -22,15 +23,12 @@ class SendPage extends StatefulWidget {
 }
 
 class _SendPageState extends State<SendPage> {
-  //
   var titleController = TextEditingController();
-  //
   var author1Controller = TextEditingController();
   var author2Controller = TextEditingController();
   var author3Controller = TextEditingController();
   var author4Controller = TextEditingController();
   var author5Controller = TextEditingController();
-  //
   var abstractController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
@@ -72,6 +70,68 @@ class _SendPageState extends State<SendPage> {
     );
   }
 
+  Future<void> submitArticle() async{
+
+    if (_formKey.currentState!.validate()) {
+      final User? user = FirebaseAuth.instance.currentUser;
+
+      final providerRead = context.read<SendVM>();
+      if (providerRead.listSimpleTextField.isEmpty) {
+        // atribui a ultima modificação do author1Controller a lista Controllers
+        providerRead.addSimpleTextField(
+          SimpleTextField(
+            index: 2,
+            hintText: "Ex. Fulano de Tal da Silva Souza",
+            textEditingController: author1Controller,
+          ),
+        );
+      }
+
+      //step 1 => transform input in model
+      final articleInstance = Article.fromMap({
+        "title": titleController.text,
+        "userUid": user!.uid,
+        "isApproved": false,
+        "authors": [
+          author1Controller.text,
+          author2Controller.text,
+          author3Controller.text,
+          author4Controller.text,
+          author5Controller.text,
+        ],
+        "abstract": abstractController.text,
+      });
+
+      //step 2 => send file with name of document
+
+      await providerRead.uploadDoc(
+        docmodel: providerRead.doc!,
+        context: context,
+        nameArticle: titleController.text,
+      );
+      await Future.delayed(
+          const Duration(milliseconds: 500));
+      await providerRead
+          .sendArticle(articleInstance); // enviando arquivo
+      if (!mounted) return;
+      customSnackBar(
+          text:
+          "Artigo enviado com sucesso! Aguarde a aprovação.",
+          context: context);
+      Navigator.pop(context);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.red,
+        content: Text(
+          "Campos inválidos",
+          overflow: TextOverflow.ellipsis,
+          style: AppTextStyles.buttonBoldHeading,
+        ),
+      ));
+    }
+    return;
+  }
+
   @override
   Widget build(BuildContext context) {
     final providerRead = context.read<SendVM>();
@@ -90,6 +150,7 @@ class _SendPageState extends State<SendPage> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
+            backgroundColor: AppColors.primary,
             expandedHeight: 100.0,
             pinned: true,
             centerTitle: true,
@@ -105,7 +166,7 @@ class _SendPageState extends State<SendPage> {
             flexibleSpace: FlexibleSpaceBar(
               //centerTitle: true,
               title: Text(
-                "Enviar arquivo",
+                "Enviar Artigo",
                 overflow: TextOverflow.ellipsis,
                 style: AppTextStyles.titleRegular,
               ),
@@ -240,65 +301,7 @@ class _SendPageState extends State<SendPage> {
                       },
                     ),
                     ButtonSubmitArticleWidget(
-                      function: () async {
-                        if (_formKey.currentState!.validate()) {
-                          final User? user = FirebaseAuth.instance.currentUser;
-
-                          final providerRead = context.read<SendVM>();
-                          if (providerRead.listSimpleTextField.isEmpty) {
-                            // atribui a ultima modificação do author1Controller a lista Controllers
-                            providerRead.addSimpleTextField(
-                              SimpleTextField(
-                                index: 2,
-                                hintText: "Ex. Fulano de Tal da Silva Souza",
-                                textEditingController: author1Controller,
-                              ),
-                            );
-                          }
-
-                          //step 1 => transform input in model
-                          final articleInstance = Article.fromMap({
-                            "title": titleController.text,
-                            "userUid": user!.uid,
-                            "isApproved": false,
-                            "authors": [
-                              author1Controller.text,
-                              author2Controller.text,
-                              author3Controller.text,
-                              author4Controller.text,
-                              author5Controller.text,
-                            ],
-                            "abstract": abstractController.text,
-                          });
-
-                          //step 2 => send file with name of document
-
-                          await providerRead.uploadDoc(
-                            docmodel: providerRead.doc!,
-                            context: context,
-                            nameArticle: titleController.text,
-                          );
-                          await Future.delayed(
-                              const Duration(milliseconds: 500));
-                          await providerRead
-                              .sendArticle(articleInstance); // enviando arquivo
-                          if (!mounted) return;
-                          customSnackBar(
-                              text:
-                                  "Artigo enviado com sucesso! Aguarde a aprovação.",
-                              context: context);
-                          Navigator.pop(context);
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            backgroundColor: Colors.red,
-                            content: Text(
-                              "Campos inválidos",
-                              overflow: TextOverflow.ellipsis,
-                              style: AppTextStyles.buttonBoldHeading,
-                            ),
-                          ));
-                        }
-                      },
+                      function: submitArticle,
                     ),
                   ],
                 ),

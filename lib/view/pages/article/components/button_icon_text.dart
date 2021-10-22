@@ -29,6 +29,7 @@ class ButtonIconTextWidget extends StatelessWidget {
             color: AppColors.grey,
             width: AppSize.defaultStroke,
           ),
+          borderRadius: BorderRadius.circular(AppSize.defaultBorderRadius),
         ),
         child: Row(
           children: [

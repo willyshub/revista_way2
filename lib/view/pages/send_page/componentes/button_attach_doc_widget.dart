@@ -21,7 +21,7 @@ class ButtonAttachDoc extends StatelessWidget {
             color: AppColors.heading,
             width: AppSize.defaultStroke,
           ),
-          borderRadius: BorderRadius.circular(5),
+          borderRadius: BorderRadius.circular(AppSize.defaultBorderRadius),
         ),
         width: AppSize.getWidth(context),
         child: Row(

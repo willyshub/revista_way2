@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppSize {
+  static double defaultBorderRadius = 5.0;
   static double defaultPadding = 15.0;
   static double defaultElevation = 2.0;
   static double defaultStroke = 1.5;

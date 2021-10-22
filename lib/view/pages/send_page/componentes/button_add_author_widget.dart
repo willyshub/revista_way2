@@ -19,6 +19,7 @@ class ButtonAddAuthorWidget extends StatelessWidget {
     final length = context.watch<SendVM>().listSimpleTextField.length;
 
     return Container(
+      clipBehavior: Clip.antiAliasWithSaveLayer,
       height: 50.0,
       margin: EdgeInsets.only(top: AppSize.defaultPadding / 3),
       decoration: BoxDecoration(
@@ -30,7 +31,9 @@ class ButtonAddAuthorWidget extends StatelessWidget {
                   ? AppColors.input
                   : AppColors.grey,
           width: AppSize.defaultStroke,
+
         ),
+        borderRadius: BorderRadius.circular(AppSize.defaultBorderRadius),
       ),
       child: Material(
         child: InkWell(

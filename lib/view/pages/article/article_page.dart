@@ -87,6 +87,7 @@ class _ArticlePageState extends State<ArticlePage> {
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
+            backgroundColor: AppColors.primary,
             toolbarHeight: 60,
             expandedHeight: 100.0,
             collapsedHeight: 60.0,

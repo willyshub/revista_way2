@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"  xmlns:tools="http://schemas.android.com/tools"
     package="com.example.revista_way2">
    <application
-        android:label="revista_way2"
-        android:icon="@mipmap/ic_launcher">
+        android:label="RevistaWAY"
+        android:icon="@mipmap/launcher_icon">
         <provider
                 android:name="androidx.core.content.FileProvider"
                 android:authorities="${applicationId}.fileProvider"
