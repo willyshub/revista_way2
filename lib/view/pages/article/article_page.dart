@@ -4,9 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:native_pdf_view/native_pdf_view.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:revista_way2/view-model/auth/auth_firebase.dart';
+import 'package:share_plus/share_plus.dart';
 import '/exports/my_classes.dart';
 import 'components/button_icon_text.dart';
-import 'package:share_plus/share_plus.dart';
 
 class ArticlePage extends StatefulWidget {
   const ArticlePage({Key? key, required this.article}) : super(key: key);
@@ -17,21 +17,19 @@ class ArticlePage extends StatefulWidget {
 }
 
 class _ArticlePageState extends State<ArticlePage> {
+
   String? _urlDonwload;
   File? _pdfArticle;
 
   Future<String> getUrlDonwload() async {
     final storage = FirebaseStorage.instance;
-    final downloadURL = await storage
-        .ref(
-            "articles_pdfs/pdf-${widget.article.id}-${widget.article.userUid}.pdf")
-        .getDownloadURL();
+    final ref =
+        "articles_pdfs/pdf-${widget.article.id}-${widget.article.userUid}.pdf";
+    final downloadURL = await storage.ref(ref).getDownloadURL();
     return downloadURL;
   }
 
   Future<File> createFileOfPdfUrl(String url) async {
-    // NomeModelo do pdf no firebase
-    //pdf-(idArtigo)-(uid).pdf
     final request = await HttpClient().getUrl(Uri.parse(url));
     final response = await request.close();
     final bytes = await consolidateHttpClientResponseBytes(response);

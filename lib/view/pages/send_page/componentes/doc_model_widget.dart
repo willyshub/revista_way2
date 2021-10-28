@@ -79,6 +79,5 @@ class DocWidgetModel extends StatelessWidget {
         ],
       ),
     );
-
   }
 }
